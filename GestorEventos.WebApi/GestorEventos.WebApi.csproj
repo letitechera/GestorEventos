@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GestorEventos.DAL\GestorEventos.DAL.csproj" />
+  </ItemGroup>
+
 </Project>
