@@ -1,65 +1,62 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using GestorEventos.Core;
 using GestorEventos.Models;
-using System.Threading.Tasks;
 
 namespace GestorEventos.DAL
 {
-    public class AppDbInitializer
+    public static class AppDbInitializer
     {
-        private AppDbContext _context;
-
-        public AppDbInitializer(AppDbContext context)
+        public static void Initialize(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
         {
-            _context = context;
+            EnsureRoles(roleManager);
+            EnsureUsers(userManager);
         }
 
-        public void Initialize()
+        private static void EnsureRoles(RoleManager<IdentityRole> roleManager)
         {
-            EnsureRoles();
-            EnsureSuperAdmin();
-        }
-
-        private void EnsureRoles()
-        {
-            var roleStore = new RoleStore<IdentityRole>(_context);
-
             // Admin
-            if (!roleStore.Roles.Any(r => r.Name.Equals(Constants.RoleNameAdmin)))
+            if (!roleManager.RoleExistsAsync(Constants.RoleNameAdmin).Result)
             {
-                roleStore.CreateAsync(new IdentityRole(Constants.RoleNameAdmin));
+                roleManager.CreateAsync(new IdentityRole(Constants.RoleNameAdmin)).Wait();
+            }
+
+            // Organizer
+            if (!roleManager.RoleExistsAsync(Constants.RoleNameOrganizer).Result)
+            {
+                roleManager.CreateAsync(new IdentityRole(Constants.RoleNameOrganizer)).Wait();
+            }
+
+            // Creditor
+            if (!roleManager.RoleExistsAsync(Constants.RoleNameCreditor).Result)
+            {
+                roleManager.CreateAsync(new IdentityRole(Constants.RoleNameCreditor)).Wait();
+            }
+
+            // Participant
+            if (!roleManager.RoleExistsAsync(Constants.RoleNameParticipant).Result)
+            {
+                roleManager.CreateAsync(new IdentityRole(Constants.RoleNameParticipant)).Wait();
             }
         }
 
-        private void EnsureSuperAdmin()
+        private static void EnsureUsers(UserManager<AppUser> userManager)
         {
-            var superAdmin = new AppUser
+            var admin = new AppUser
             {
                 Email = Constants.DefaultAdmin_Email,
                 EmailConfirmed = true,
                 UserName = Constants.DefaultAdmin_Email,
                 FirstName = "Super",
                 LastName = "Admin",
-                Enabled = true
+                Enabled = true,
             };
 
-            if (!_context.Users.Any(u => u.Email.Equals(superAdmin.Email)))
-            {
-                var password = new PasswordHasher<AppUser>();
-                var hashed = password.HashPassword(superAdmin, Constants.DefaultAdmin_Password);
-                superAdmin.PasswordHash = hashed;
-                var userStore = new UserStore<AppUser>(_context);
-                userStore.CreateAsync(superAdmin);
-                userStore.AddToRoleAsync(superAdmin, Constants.RoleNameAdmin);
-            }
+            var result = userManager.CreateAsync(admin, "Password01").Result;
 
-            _context.SaveChangesAsync();
+            if (result.Succeeded)
+            {
+                userManager.AddToRoleAsync(admin, Constants.RoleNameAdmin).Wait();
+            }
         }
     }
 }
