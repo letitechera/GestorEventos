@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace GestorEventos.Models
 {
@@ -7,5 +8,6 @@ namespace GestorEventos.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool Enabled { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

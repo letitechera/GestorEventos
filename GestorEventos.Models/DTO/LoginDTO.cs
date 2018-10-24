@@ -1,4 +1,4 @@
-﻿namespace GestorEventos.WebApi.DTOs
+﻿namespace GestorEventos.Models.DTOs
 {
     public class LoginDTO
     {

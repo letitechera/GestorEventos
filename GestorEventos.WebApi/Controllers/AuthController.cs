@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using GestorEventos.Models;
+using GestorEventos.Models.DTOs;
 using GestorEventos.WebApi.Auth;
-using GestorEventos.WebApi.DTOs;
 using GestorEventos.WebApi.Helpers;
 using GestorEventos.WebApi.Models;
 using Microsoft.AspNetCore.Identity;
