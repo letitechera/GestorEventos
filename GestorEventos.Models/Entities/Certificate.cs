@@ -6,9 +6,12 @@ namespace GestorEventos.Models.Entities
 {
     public class Certificate: BaseEntity
     {
-        public Participant Participant { get; set; }
-        public Event Event { get; set; }
         public bool Sent { get; set; }
         public string TemplateId { get; set; }
+        public int ParticipantId { get; set; }
+        public int EventId { get; set; }
+
+        public virtual Participant Participant { get; set; }
+        public virtual Event Event { get; set; }
     }
 }
