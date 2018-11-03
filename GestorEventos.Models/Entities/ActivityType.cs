@@ -7,5 +7,6 @@ namespace GestorEventos.Models.Entities
     public class ActivityType: BaseEntity
     {
         public string Name { get; set; }
+        
     }
 }

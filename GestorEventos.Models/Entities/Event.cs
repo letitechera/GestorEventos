@@ -14,9 +14,7 @@ namespace GestorEventos.Models.Entities
         public int OrganizerId { get; set; }
         public int EventTopicId { get; set; }
         public IList<EventSchedule> Schedules { get; set; }
-        public IList<Creditor> Creditors { get; set; }
         public IList<Participant> Participants { get; set; }
-        public IList<Checkpoint> Checkpoints { get; set; }
 
         public virtual Location Location { get; set; }
         public virtual Organizer Organizer { get; set; }

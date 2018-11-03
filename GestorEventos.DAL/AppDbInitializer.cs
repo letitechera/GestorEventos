@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using GestorEventos.Core;
 using GestorEventos.Models;
+using GestorEventos.Models.Entities;
 
 namespace GestorEventos.DAL
 {

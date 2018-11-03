@@ -21,13 +21,10 @@ namespace GestorEventos.DAL
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<Attendant> Attendants { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<Checkpoint> Checkpoints { get; set; }
-        public DbSet<Creditor> Creditor { get; set; }
         public DbSet<Event> Event { get; set; }
         public DbSet<EventSchedule> EventSchedule { get; set; }
         public DbSet<EventTopic> EventTopic { get; set; }
         public DbSet<Location> Location { get; set; }
-        public DbSet<Organization> Organization { get; set; }
         public DbSet<Organizer> Organizer { get; set; }
         public DbSet<Participant> Participant { get; set; }
         public DbSet<Speaker> Speaker { get; set; }
@@ -60,9 +57,11 @@ namespace GestorEventos.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Checkpoint>()
-                .HasMany(x => x.Creditors)
-                .WithOne(x => x.Checkpoint);
+            modelBuilder.Entity<Participant>()
+                .HasOne(x => x.Certificate)
+                .WithOne(x => x.Participant)
+                .HasForeignKey<Certificate>(x => x.ParticipantId).IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

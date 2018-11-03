@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GestorEventos.Models;
 using GestorEventos.Models.DTOs;
+using GestorEventos.Models.Entities;
 using GestorEventos.WebApi.Auth;
 using GestorEventos.WebApi.Helpers;
 using GestorEventos.WebApi.Models;
