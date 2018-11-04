@@ -53,15 +53,6 @@ namespace GestorEventos.DAL
                 //((BaseEntity)entity.Entity).ModifiedById = userId;
             }
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Participant>()
-                .HasOne(x => x.Certificate)
-                .WithOne(x => x.Participant)
-                .HasForeignKey<Certificate>(x => x.ParticipantId).IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
-        }
     }
 }

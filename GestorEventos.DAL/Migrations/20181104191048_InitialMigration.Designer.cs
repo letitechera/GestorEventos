@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestorEventos.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20181102195425_Changes-02-11-18")]
-    partial class Changes021118
+    [Migration("20181104191048_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -196,16 +196,11 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("ParticipantId");
-
                     b.Property<bool>("Sent");
 
                     b.Property<string>("TemplateId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParticipantId")
-                        .IsUnique();
 
                     b.ToTable("Certificates");
                 });
@@ -357,8 +352,6 @@ namespace GestorEventos.DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AttendantId");
-
-                    b.Property<int?>("CertificateId");
 
                     b.Property<string>("CreatedById");
 
@@ -573,14 +566,6 @@ namespace GestorEventos.DAL.Migrations
                     b.HasOne("GestorEventos.Models.Entities.EventSchedule", "EventSchedule")
                         .WithMany("Activities")
                         .HasForeignKey("EventScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Certificate", b =>
-                {
-                    b.HasOne("GestorEventos.Models.Entities.Participant", "Participant")
-                        .WithOne("Certificate")
-                        .HasForeignKey("GestorEventos.Models.Entities.Certificate", "ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
