@@ -202,8 +202,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParticipantId")
-                        .IsUnique();
+                    b.HasIndex("ParticipantId");
 
                     b.ToTable("Certificates");
                 });
@@ -355,8 +354,6 @@ namespace GestorEventos.DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AttendantId");
-
-                    b.Property<int?>("CertificateId");
 
                     b.Property<string>("CreatedById");
 
@@ -577,8 +574,8 @@ namespace GestorEventos.DAL.Migrations
             modelBuilder.Entity("GestorEventos.Models.Entities.Certificate", b =>
                 {
                     b.HasOne("GestorEventos.Models.Entities.Participant", "Participant")
-                        .WithOne("Certificate")
-                        .HasForeignKey("GestorEventos.Models.Entities.Certificate", "ParticipantId")
+                        .WithMany()
+                        .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-namespace GestorEventos.Models.Entities
+﻿namespace GestorEventos.Models.Entities
 {
     public class Certificate: BaseEntity
     {

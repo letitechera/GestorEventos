@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestorEventos.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20181101145444_DatabaseInit")]
-    partial class DatabaseInit
+    [Migration("20181104191232_ParticipantCertificate")]
+    partial class ParticipantCertificate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,71 @@ namespace GestorEventos.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("GestorEventos.Models.AppUser", b =>
+            modelBuilder.Entity("GestorEventos.Models.Entities.Activity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ActivityTypeId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<string>("CreatedByName");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<TimeSpan>("EndTime");
+
+                    b.Property<int>("EventScheduleId");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<string>("ModifiedByName");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.Property<TimeSpan>("StartTime");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityTypeId");
+
+                    b.HasIndex("EventScheduleId");
+
+                    b.ToTable("Activities");
+                });
+
+            modelBuilder.Entity("GestorEventos.Models.Entities.ActivityType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<string>("CreatedByName");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<string>("ModifiedByName");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActivityTypes");
+                });
+
+            modelBuilder.Entity("GestorEventos.Models.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -85,74 +149,6 @@ namespace GestorEventos.DAL.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("AppUser");
                 });
 
-            modelBuilder.Entity("GestorEventos.Models.Entities.Activity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ActivityTypeId");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<string>("CreatedByName");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<TimeSpan>("EndTime");
-
-                    b.Property<int?>("EventScheduleId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<string>("ModifiedByName");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("SpeakerId");
-
-                    b.Property<TimeSpan>("StartTime");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActivityTypeId");
-
-                    b.HasIndex("EventScheduleId");
-
-                    b.HasIndex("SpeakerId");
-
-                    b.ToTable("Activities");
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.ActivityType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<string>("CreatedByName");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<string>("ModifiedByName");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ActivityTypes");
-                });
-
             modelBuilder.Entity("GestorEventos.Models.Entities.Attendant", b =>
                 {
                     b.Property<int>("Id")
@@ -194,8 +190,6 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<int>("EventId");
-
                     b.Property<string>("ModifiedById");
 
                     b.Property<string>("ModifiedByName");
@@ -210,41 +204,9 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("ParticipantId")
-                        .IsUnique();
+                    b.HasIndex("ParticipantId");
 
                     b.ToTable("Certificates");
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Checkpoint", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<string>("CreatedByName");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("EventId");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<string>("ModifiedByName");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Point");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Checkpoints");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Event", b =>
@@ -387,39 +349,6 @@ namespace GestorEventos.DAL.Migrations
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("GestorEventos.Models.Entities.Organization", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("CreatedById");
-
-                    b.Property<string>("CreatedByName");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Email");
-
-                    b.Property<string>("ModifiedById");
-
-                    b.Property<string>("ModifiedByName");
-
-                    b.Property<DateTime?>("ModifiedDate");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Phone");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Organization");
-                });
-
             modelBuilder.Entity("GestorEventos.Models.Entities.Participant", b =>
                 {
                     b.Property<int>("Id")
@@ -427,8 +356,6 @@ namespace GestorEventos.DAL.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AttendantId");
-
-                    b.Property<int?>("CertificateId");
 
                     b.Property<string>("CreatedById");
 
@@ -461,6 +388,8 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActivityId");
+
                     b.Property<string>("Company");
 
                     b.Property<string>("ContactUrl");
@@ -490,6 +419,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("Position");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
 
                     b.ToTable("Speaker");
                 });
@@ -608,32 +539,21 @@ namespace GestorEventos.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GestorEventos.Models.Entities.Creditor", b =>
-                {
-                    b.HasBaseType("GestorEventos.Models.AppUser");
-
-                    b.Property<int>("CheckpointId");
-
-                    b.Property<int?>("EventId");
-
-                    b.HasIndex("CheckpointId");
-
-                    b.HasIndex("EventId");
-
-                    b.ToTable("Creditor");
-
-                    b.HasDiscriminator().HasValue("Creditor");
-                });
-
             modelBuilder.Entity("GestorEventos.Models.Entities.Organizer", b =>
                 {
-                    b.HasBaseType("GestorEventos.Models.AppUser");
+                    b.HasBaseType("GestorEventos.Models.Entities.AppUser");
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("Description");
 
                     b.Property<string>("Image");
 
+                    b.Property<string>("Name");
+
                     b.Property<int>("OrganizationId");
 
-                    b.HasIndex("OrganizationId");
+                    b.Property<string>("Phone");
 
                     b.ToTable("Organizer");
 
@@ -647,34 +567,17 @@ namespace GestorEventos.DAL.Migrations
                         .HasForeignKey("ActivityTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("GestorEventos.Models.Entities.EventSchedule")
+                    b.HasOne("GestorEventos.Models.Entities.EventSchedule", "EventSchedule")
                         .WithMany("Activities")
-                        .HasForeignKey("EventScheduleId");
-
-                    b.HasOne("GestorEventos.Models.Entities.Speaker", "Speaker")
-                        .WithMany()
-                        .HasForeignKey("SpeakerId")
+                        .HasForeignKey("EventScheduleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Certificate", b =>
                 {
-                    b.HasOne("GestorEventos.Models.Entities.Event", "Event")
-                        .WithMany()
-                        .HasForeignKey("EventId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("GestorEventos.Models.Entities.Participant", "Participant")
-                        .WithOne("Certificate")
-                        .HasForeignKey("GestorEventos.Models.Entities.Certificate", "ParticipantId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Checkpoint", b =>
-                {
-                    b.HasOne("GestorEventos.Models.Entities.Event", "Event")
-                        .WithMany("Checkpoints")
-                        .HasForeignKey("EventId")
+                        .WithMany()
+                        .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -716,6 +619,14 @@ namespace GestorEventos.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("GestorEventos.Models.Entities.Speaker", b =>
+                {
+                    b.HasOne("GestorEventos.Models.Entities.Activity", "Activity")
+                        .WithMany("Speakers")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -726,7 +637,7 @@ namespace GestorEventos.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("GestorEventos.Models.AppUser")
+                    b.HasOne("GestorEventos.Models.Entities.AppUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -734,7 +645,7 @@ namespace GestorEventos.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("GestorEventos.Models.AppUser")
+                    b.HasOne("GestorEventos.Models.Entities.AppUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -747,7 +658,7 @@ namespace GestorEventos.DAL.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("GestorEventos.Models.AppUser")
+                    b.HasOne("GestorEventos.Models.Entities.AppUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -755,29 +666,9 @@ namespace GestorEventos.DAL.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("GestorEventos.Models.AppUser")
+                    b.HasOne("GestorEventos.Models.Entities.AppUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Creditor", b =>
-                {
-                    b.HasOne("GestorEventos.Models.Entities.Checkpoint", "Checkpoint")
-                        .WithMany("Creditors")
-                        .HasForeignKey("CheckpointId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GestorEventos.Models.Entities.Event")
-                        .WithMany("Creditors")
-                        .HasForeignKey("EventId");
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Organizer", b =>
-                {
-                    b.HasOne("GestorEventos.Models.Entities.Organization", "Organization")
-                        .WithMany("Organizers")
-                        .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
