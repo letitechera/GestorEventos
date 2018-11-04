@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unity" Version="5.8.11" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\GestorEventos.DAL\GestorEventos.DAL.csproj" />
   </ItemGroup>
 

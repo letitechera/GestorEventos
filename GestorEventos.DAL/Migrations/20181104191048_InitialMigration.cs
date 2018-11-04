@@ -4,42 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GestorEventos.DAL.Migrations
 {
-    public partial class DatabaseInit : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "DateOfBirth",
-                table: "AspNetUsers",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<string>(
-                name: "Discriminator",
-                table: "AspNetUsers",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<int>(
-                name: "CheckpointId",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "EventId",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Image",
-                table: "AspNetUsers",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "OrganizationId",
-                table: "AspNetUsers",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "ActivityTypes",
                 columns: table => new
@@ -57,6 +25,56 @@ namespace GestorEventos.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ActivityTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Enabled = table.Column<bool>(nullable: false),
+                    DateOfBirth = table.Column<DateTime>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    OrganizationId = table.Column<int>(nullable: true),
+                    Image = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,6 +96,26 @@ namespace GestorEventos.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attendants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Certificates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedByName = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedByName = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Sent = table.Column<bool>(nullable: false),
+                    TemplateId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Certificates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,52 +164,109 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Organization",
+                name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedByName = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    ModifiedByName = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Address = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true)
+                    RoleId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Organization", x => x.Id);
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Speaker",
+                name: "AspNetUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedByName = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    ModifiedByName = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    FisrtName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Position = table.Column<string>(nullable: true),
-                    Nationality = table.Column<string>(nullable: true),
-                    Company = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    ContactUrl = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Speaker", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
+                    Name = table.Column<string>(maxLength: 128, nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,32 +315,6 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Checkpoints",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedByName = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    ModifiedByName = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Point = table.Column<string>(nullable: true),
-                    EventId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Checkpoints", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Checkpoints_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "EventSchedule",
                 columns: table => new
                 {
@@ -283,10 +352,9 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedByName = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
-                    QRCode = table.Column<string>(nullable: true),
                     AttendantId = table.Column<int>(nullable: false),
                     EventId = table.Column<int>(nullable: false),
-                    CertificateId = table.Column<int>(nullable: true)
+                    QRCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -320,10 +388,9 @@ namespace GestorEventos.DAL.Migrations
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ActivityTypeId = table.Column<int>(nullable: false),
-                    SpeakerId = table.Column<int>(nullable: false),
                     StartTime = table.Column<TimeSpan>(nullable: false),
                     EndTime = table.Column<TimeSpan>(nullable: false),
-                    EventScheduleId = table.Column<int>(nullable: true)
+                    EventScheduleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -339,17 +406,11 @@ namespace GestorEventos.DAL.Migrations
                         column: x => x.EventScheduleId,
                         principalTable: "EventSchedule",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Activities_Speaker_SpeakerId",
-                        column: x => x.SpeakerId,
-                        principalTable: "Speaker",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Certificates",
+                name: "Speaker",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -360,42 +421,26 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedByName = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Sent = table.Column<bool>(nullable: false),
-                    TemplateId = table.Column<string>(nullable: true),
-                    ParticipantId = table.Column<int>(nullable: false),
-                    EventId = table.Column<int>(nullable: false)
+                    FisrtName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Position = table.Column<string>(nullable: true),
+                    Nationality = table.Column<string>(nullable: true),
+                    Company = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    ContactUrl = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true),
+                    ActivityId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.PrimaryKey("PK_Speaker", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Certificates_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Certificates_Participant_ParticipantId",
-                        column: x => x.ParticipantId,
-                        principalTable: "Participant",
+                        name: "FK_Speaker_Activities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_CheckpointId",
-                table: "AspNetUsers",
-                column: "CheckpointId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_EventId",
-                table: "AspNetUsers",
-                column: "EventId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_OrganizationId",
-                table: "AspNetUsers",
-                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_ActivityTypeId",
@@ -408,25 +453,43 @@ namespace GestorEventos.DAL.Migrations
                 column: "EventScheduleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Activities_SpeakerId",
-                table: "Activities",
-                column: "SpeakerId");
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Certificates_EventId",
-                table: "Certificates",
-                column: "EventId");
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Certificates_ParticipantId",
-                table: "Certificates",
-                column: "ParticipantId",
-                unique: true);
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Checkpoints_EventId",
-                table: "Checkpoints",
-                column: "EventId");
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Event_EventTopicId",
@@ -458,71 +521,52 @@ namespace GestorEventos.DAL.Migrations
                 table: "Participant",
                 column: "EventId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Checkpoints_CheckpointId",
-                table: "AspNetUsers",
-                column: "CheckpointId",
-                principalTable: "Checkpoints",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Event_EventId",
-                table: "AspNetUsers",
-                column: "EventId",
-                principalTable: "Event",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Organization_OrganizationId",
-                table: "AspNetUsers",
-                column: "OrganizationId",
-                principalTable: "Organization",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.CreateIndex(
+                name: "IX_Speaker_ActivityId",
+                table: "Speaker",
+                column: "ActivityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Checkpoints_CheckpointId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Event_EventId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Organization_OrganizationId",
-                table: "AspNetUsers");
+            migrationBuilder.DropTable(
+                name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
-                name: "Activities");
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
                 name: "Certificates");
 
             migrationBuilder.DropTable(
-                name: "Checkpoints");
+                name: "Participant");
 
             migrationBuilder.DropTable(
-                name: "Organization");
+                name: "Speaker");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Attendants");
+
+            migrationBuilder.DropTable(
+                name: "Activities");
 
             migrationBuilder.DropTable(
                 name: "ActivityTypes");
 
             migrationBuilder.DropTable(
                 name: "EventSchedule");
-
-            migrationBuilder.DropTable(
-                name: "Speaker");
-
-            migrationBuilder.DropTable(
-                name: "Participant");
-
-            migrationBuilder.DropTable(
-                name: "Attendants");
 
             migrationBuilder.DropTable(
                 name: "Event");
@@ -533,41 +577,8 @@ namespace GestorEventos.DAL.Migrations
             migrationBuilder.DropTable(
                 name: "Location");
 
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_CheckpointId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_EventId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_OrganizationId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "DateOfBirth",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Discriminator",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "CheckpointId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "EventId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Image",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "OrganizationId",
-                table: "AspNetUsers");
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }
