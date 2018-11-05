@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 
-namespace GestorEventos.Models
+namespace GestorEventos.Models.Entities
 {
     public class AppUser: IdentityUser
     {

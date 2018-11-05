@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Net;
 using System.Text;
+using GestorEventos.Models.Entities;
 
 namespace GestorEventos.WebApi
 {

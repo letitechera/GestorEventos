@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GestorEventos.BLL\GestorEventos.BLL.csproj" />
     <ProjectReference Include="..\GestorEventos.DAL\GestorEventos.DAL.csproj" />
     <ProjectReference Include="..\GestorEventos.Models\GestorEventos.Models.csproj" />
   </ItemGroup>

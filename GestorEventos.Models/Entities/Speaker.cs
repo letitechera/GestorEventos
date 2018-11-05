@@ -14,5 +14,8 @@ namespace GestorEventos.Models.Entities
         public string Email { get; set; }
         public string ContactUrl { get; set; }
         public string Image { get; set; }
+        public int ActivityId { get; set; }
+
+        public virtual Activity Activity { get; set; }
     }
 }

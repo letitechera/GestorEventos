@@ -4,14 +4,16 @@ using GestorEventos.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GestorEventos.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181104191048_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,15 +196,11 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime?>("ModifiedDate");
 
-                    b.Property<int>("ParticipantId");
-
                     b.Property<bool>("Sent");
 
                     b.Property<string>("TemplateId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParticipantId");
 
                     b.ToTable("Certificates");
                 });
@@ -568,14 +566,6 @@ namespace GestorEventos.DAL.Migrations
                     b.HasOne("GestorEventos.Models.Entities.EventSchedule", "EventSchedule")
                         .WithMany("Activities")
                         .HasForeignKey("EventScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GestorEventos.Models.Entities.Certificate", b =>
-                {
-                    b.HasOne("GestorEventos.Models.Entities.Participant", "Participant")
-                        .WithMany()
-                        .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
