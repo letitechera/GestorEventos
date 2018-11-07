@@ -18,6 +18,10 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Net;
 using System.Text;
+using GestorEventos.BLL;
+using GestorEventos.BLL.Interfaces;
+using GestorEventos.DAL.Repositories;
+using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 
 namespace GestorEventos.WebApi
@@ -46,6 +50,13 @@ namespace GestorEventos.WebApi
             
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.TryAddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+            //Logic Services
+            services.TryAddTransient<IRepository<Event>, Repository<Event>>();
+            services.TryAddTransient<IRepository<EventTopic>, Repository<EventTopic>>();
+            services.TryAddTransient<IRepository<Participant>, Repository<Participant>>();
+            services.TryAddTransient<IRepository<EventSchedule>, Repository<EventSchedule>>();
+            services.TryAddTransient<IEventsLogic, EventsLogic>();
 
             // jwt wire up
             // Get options from app settings

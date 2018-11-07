@@ -21,13 +21,13 @@ namespace GestorEventos.DAL
         public DbSet<ActivityType> ActivityTypes { get; set; }
         public DbSet<Attendant> Attendants { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<Event> Event { get; set; }
-        public DbSet<EventSchedule> EventSchedule { get; set; }
-        public DbSet<EventTopic> EventTopic { get; set; }
-        public DbSet<Location> Location { get; set; }
-        public DbSet<Organizer> Organizer { get; set; }
-        public DbSet<Participant> Participant { get; set; }
-        public DbSet<Speaker> Speaker { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventSchedule> EventSchedules { get; set; }
+        public DbSet<EventTopic> EventTopics { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Organizer> Organizers { get; set; }
+        public DbSet<Participant> Participants { get; set; }
+        public DbSet<Speaker> Speakers { get; set; }
 
         public override int SaveChanges()
         {
