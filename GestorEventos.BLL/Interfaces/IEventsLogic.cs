@@ -11,5 +11,8 @@ namespace GestorEventos.BLL.Interfaces
         bool DeleteEvent(int eventId);
         IEnumerable<Event> GetEvents();
         Event GetEvent(int eventId);
+        bool CancelEvent(int eventId);
+        bool CreateEventTopic(string topicName);
+        bool DeleteEventTopic(int topicId);
     }
 }

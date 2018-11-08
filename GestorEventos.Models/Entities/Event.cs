@@ -13,6 +13,7 @@ namespace GestorEventos.Models.Entities
         public int LocationId { get; set; }
         public int OrganizerId { get; set; }
         public int EventTopicId { get; set; }
+        public bool? Canceled { get; set; }
         public IList<EventSchedule> Schedules { get; set; }
         public IList<Participant> Participants { get; set; }
 

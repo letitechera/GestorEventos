@@ -4,14 +4,16 @@ using GestorEventos.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GestorEventos.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181105171450_EventCancel")]
+    partial class EventCancel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,7 +255,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("OrganizerId1");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventSchedule", b =>
@@ -282,7 +284,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventSchedules");
+                    b.ToTable("EventSchedule");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventTopic", b =>
@@ -307,7 +309,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventTopics");
+                    b.ToTable("EventTopic");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Location", b =>
@@ -346,7 +348,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Participant", b =>
@@ -379,7 +381,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Participants");
+                    b.ToTable("Participant");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Speaker", b =>
@@ -422,7 +424,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Speakers");
+                    b.ToTable("Speaker");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
