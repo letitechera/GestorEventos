@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailChimp.Net.V3" Version="3.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GestorEventos.DAL\GestorEventos.DAL.csproj" />
   </ItemGroup>
 
