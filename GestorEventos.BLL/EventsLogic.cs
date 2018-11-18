@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace GestorEventos.BLL
 {
@@ -13,14 +14,20 @@ namespace GestorEventos.BLL
         readonly IRepository<EventTopic> _topicsRepository;
         readonly IRepository<EventSchedule> _schedulesRepository;
         readonly IRepository<Participant> _participantRepository;
+        readonly IRepository<Attendant> _attendantsRepository;
+        readonly IAccreditationLogic _accreditationLogic;
+        readonly IMailingLogic _mailingLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
-            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository)
+            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository, 
+            IAccreditationLogic accreditationLogic, IMailingLogic mailingLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
             _participantRepository = participantRepository;
             _topicsRepository = topicsRepository;
+            _accreditationLogic = accreditationLogic;
+            _mailingLogic = mailingLogic;
         }
 
         #region Events
@@ -92,6 +99,45 @@ namespace GestorEventos.BLL
             }
         }
 
+        public bool RegisterToEvent(int eventId, Attendant attendant)
+        {
+            var participant = new Participant
+            {
+                EventId = eventId
+            };
+
+            try
+            {
+                //Check if an attendant with the same Email exists
+                var existant = _attendantsRepository.List()
+                    .Where(x => x.Email.ToLower() == attendant.Email.ToLower())
+                    .FirstOrDefault();
+
+                if (existant == null)
+                {
+                    participant.AttendantId = _attendantsRepository.Add(attendant);
+                }
+                else
+                {
+                    participant.AttendantId = existant.Id;
+                }
+
+                //Generate QR Code
+                participant.QRCode = _accreditationLogic.GenerateQRCode();
+
+                _participantRepository.Add(participant);
+
+                //Send Email with QR to Participant
+                _mailingLogic.SendQRCodeEmail(participant);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool CancelEvent(int eventId)
         {
             try
@@ -101,7 +147,8 @@ namespace GestorEventos.BLL
 
                 SaveEvent(canceled, true);
 
-                //TODO: SEND EMAIL TO PARTICIPANTS
+                //TODO: 
+                _mailingLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
