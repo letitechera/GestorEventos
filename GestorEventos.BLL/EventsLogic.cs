@@ -10,22 +10,23 @@ namespace GestorEventos.BLL
 {
     public class EventsLogic : IEventsLogic
     {
-        readonly IRepository<Event> _eventsRepository;
-        readonly IRepository<EventTopic> _topicsRepository;
-        readonly IRepository<EventSchedule> _schedulesRepository;
-        readonly IRepository<Participant> _participantRepository;
-        readonly IRepository<Attendant> _attendantsRepository;
-        readonly IAccreditationLogic _accreditationLogic;
-        readonly IMailingLogic _mailingLogic;
+        private readonly IRepository<Event> _eventsRepository;
+        private readonly IRepository<EventTopic> _topicsRepository;
+        private readonly IRepository<EventSchedule> _schedulesRepository;
+        private readonly IRepository<Participant> _participantRepository;
+        private readonly IRepository<Attendant> _attendantsRepository;
+        private readonly IAccreditationLogic _accreditationLogic;
+        private readonly IMailingLogic _mailingLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
-            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository, 
-            IAccreditationLogic accreditationLogic, IMailingLogic mailingLogic)
+            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, IMailingLogic mailingLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
             _participantRepository = participantRepository;
             _topicsRepository = topicsRepository;
+            _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
             _mailingLogic = mailingLogic;
         }

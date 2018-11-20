@@ -12,8 +12,8 @@ namespace GestorEventos.BLL
 {
     public class MailingLogic : IMailingLogic
     {
-        readonly IConfiguration _configuration;
-        readonly IMailChimpManager _mailChimpManager;
+        private readonly IConfiguration _configuration;
+        private readonly IMailChimpManager _mailChimpManager;
 
         public MailingLogic(IConfiguration configuration)
         {
