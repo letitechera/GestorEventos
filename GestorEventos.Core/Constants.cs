@@ -9,5 +9,8 @@
 
         public const string DefaultAdmin_Email = "default@admin.com";
         public const string DefaultAdmin_Password = "Password01";
+
+        public const string SendGridAuthLink_ConfirmEmail = "?userID={0}&code={1}";
+        public const string SendGridAuthLink_ResetPassword = "?userID={0}&code={1}";
     }
 }

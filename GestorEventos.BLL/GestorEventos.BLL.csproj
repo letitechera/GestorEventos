@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="MailChimp.Net.V3" Version="3.4.0" />
+    <PackageReference Include="Sendgrid" Version="9.10.0" />
   </ItemGroup>
 
   <ItemGroup>
