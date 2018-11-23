@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
@@ -17,10 +18,12 @@ namespace GestorEventos.BLL
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
         private readonly IMailingLogic _mailingLogic;
+        private readonly IImagesLogic _imagesLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, IMailingLogic mailingLogic)
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            IMailingLogic mailingLogic, IImagesLogic imagesLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -29,6 +32,7 @@ namespace GestorEventos.BLL
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
             _mailingLogic = mailingLogic;
+            _imagesLogic = imagesLogic;
         }
 
         #region Events
@@ -56,9 +60,23 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool LoadImage()
+        public bool SaveImage(int eventId, FileInfo image)
         {
-            return true;
+            try
+            {
+                var speakersBlob = "";
+                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+
+                var _event = _eventsRepository.FindById(eventId);
+                _event.Image = imageUrl;
+                _eventsRepository.Update(_event);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public bool DeleteEvent(int eventId)
@@ -110,9 +128,9 @@ namespace GestorEventos.BLL
             try
             {
                 //Check if an attendant with the same Email exists
-                var existant = _attendantsRepository.List()
-                    .Where(x => x.Email.ToLower() == attendant.Email.ToLower())
-                    .FirstOrDefault();
+                var existant = _attendantsRepository
+                    .List()
+                    .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
 
                 if (existant == null)
                 {

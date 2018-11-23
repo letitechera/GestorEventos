@@ -67,6 +67,8 @@ namespace GestorEventos.WebApi
             services.TryAddTransient<ILocationsLogic, LocationsLogic>();
             services.TryAddTransient<IAccreditationLogic, AccreditationLogic>();
             services.TryAddTransient<IMailingLogic, MailingLogic>();
+            services.TryAddTransient<IImagesLogic, ImagesLogic>();
+            services.TryAddTransient<ISpeakersLogic, SpeakersLogic>();
 
             // jwt wire up
             // Get options from app settings
