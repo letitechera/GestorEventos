@@ -96,6 +96,7 @@ namespace GestorEventos.BLL
                 return false;
             }
         }
+
         #endregion
     }
 }
