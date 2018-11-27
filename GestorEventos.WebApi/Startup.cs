@@ -51,12 +51,24 @@ namespace GestorEventos.WebApi
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.TryAddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
-            //Logic Services
+            //Repository Services
             services.TryAddTransient<IRepository<Event>, Repository<Event>>();
             services.TryAddTransient<IRepository<EventTopic>, Repository<EventTopic>>();
             services.TryAddTransient<IRepository<Participant>, Repository<Participant>>();
             services.TryAddTransient<IRepository<EventSchedule>, Repository<EventSchedule>>();
+            services.TryAddTransient<IRepository<Location>, Repository<Location>>();
+            services.TryAddTransient<IRepository<Attendant>, Repository<Attendant>>();
+            services.TryAddTransient<IRepository<Activity>, Repository<Activity>>();
+            services.TryAddTransient<IRepository<ActivityType>, Repository<ActivityType>>();
+            services.TryAddTransient<IRepository<Speaker>, Repository<Speaker>>();
+            services.TryAddTransient<IRepository<Certificate>, Repository<Certificate>>();
+            //Logic Services
             services.TryAddTransient<IEventsLogic, EventsLogic>();
+            services.TryAddTransient<ILocationsLogic, LocationsLogic>();
+            services.TryAddTransient<IAccreditationLogic, AccreditationLogic>();
+            services.TryAddTransient<IMailingLogic, MailingLogic>();
+            services.TryAddTransient<IImagesLogic, ImagesLogic>();
+            services.TryAddTransient<ISpeakersLogic, SpeakersLogic>();
 
             // jwt wire up
             // Get options from app settings
