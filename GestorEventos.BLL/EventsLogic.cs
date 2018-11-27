@@ -17,13 +17,12 @@ namespace GestorEventos.BLL
         private readonly IRepository<Participant> _participantRepository;
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
-        private readonly IMailingLogic _mailingLogic;
         private readonly IImagesLogic _imagesLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
-            IMailingLogic mailingLogic, IImagesLogic imagesLogic)
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
+            IImagesLogic imagesLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -31,7 +30,6 @@ namespace GestorEventos.BLL
             _topicsRepository = topicsRepository;
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
-            _mailingLogic = mailingLogic;
             _imagesLogic = imagesLogic;
         }
 
@@ -147,7 +145,7 @@ namespace GestorEventos.BLL
                 _participantRepository.Add(participant);
 
                 //Send Email with QR to Participant
-                _mailingLogic.SendQRCodeEmail(participant);
+                //_emailsLogic.SendQRCodeEmail(participant);
 
                 return true;
             }
@@ -167,7 +165,7 @@ namespace GestorEventos.BLL
                 SaveEvent(canceled, true);
 
                 //TODO: 
-                _mailingLogic.SendCancelationEmails(eventId);
+                //_emailsLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
