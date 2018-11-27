@@ -1,6 +1,6 @@
 ﻿namespace GestorEventos.Models.DTO
 {
-    public class RegisterDTO
+    public class RegisterAccountRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -79,7 +79,7 @@ namespace GestorEventos.BLL
             return null;
         }
 
-        public Task<IEnumerable<UserDTO>> GetUsersToEnable()
+        public async Task<IEnumerable<UserDTO>> GetUsersToEnable()
         {
             var adminRole = _roleManager.Roles.FirstOrDefault(r => r.Name == Core.Constants.RoleNameAdmin);
 
@@ -89,10 +89,10 @@ namespace GestorEventos.BLL
             }
 
             var users = from user in _userManager.Users
-                        where user.Roles.All(r => r.RoleId != adminRole.Id) && user.Enabled == null
+                        //where user.Roles.All(r => r.RoleId != adminRole.Id) && user.Enabled == null
                         select user;
 
-            return users.ToList().Select(u => new UserDTO(u)).ToList();
+            return users.Select(u => new UserDTO(u));
         }
 
         private async Task<bool> SendEmailValidationToken(string email, string actionUrl)

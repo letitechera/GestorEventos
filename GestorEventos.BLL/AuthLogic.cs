@@ -6,6 +6,7 @@ using System.Web;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.DTO;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.Requests.Account;
 using GestorEventos.Models.Responses;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,7 +25,7 @@ namespace GestorEventos.BLL
             _sendGridLogic = sendGridLogic;
         }
 
-        public async Task<IdentityResult> RegisterUser(RegisterDTO register)
+        public async Task<IdentityResult> RegisterAccount(RegisterAccountRequest register)
         {
             var user = new AppUser
             {
@@ -59,9 +60,9 @@ namespace GestorEventos.BLL
             return result;
         }
 
-        public async Task EditUser(UserDTO userDTO)
+        public async Task EditAccount(EditAccountRequest edit)
         {
-            var user = await _userManager.FindByIdAsync(userDTO.Id);
+            var user = await _userManager.FindByIdAsync(edit.UserId);
 
             user.FirstName = user.FirstName;
             user.LastName = user.LastName;
@@ -69,13 +70,13 @@ namespace GestorEventos.BLL
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task DeleteUser(UserDTO userDTO)
+        public async Task DeleteAccount(DeleteAccountRequest delete)
         {
-            var user = await _userManager.FindByIdAsync(userDTO.Id);
+            var user = await _userManager.FindByIdAsync(delete.UserId);
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordDTO forgotPassword, string actionUrl)
+        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword, string actionUrl)
         {
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
 
@@ -101,7 +102,7 @@ namespace GestorEventos.BLL
             }
         }
 
-        public async Task<IdentityResult> ResetPassword(ResetPasswordDTO resetPassword)
+        public async Task<IdentityResult> ResetPassword(ResetPasswordRequest resetPassword)
         {
             var user = await _userManager.FindByIdAsync(resetPassword.Id);
             return await _userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.Password);
@@ -131,6 +132,11 @@ namespace GestorEventos.BLL
             callbackUrl = new Uri(callbackUrl, confirmUrl);
 
             return callbackUrl;
+        }
+
+        public async Task<bool> ExistsUser(string email)
+        {
+            return await _userManager.FindByEmailAsync(email) != null;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace GestorEventos.Models.DTO
 {
-    public class ResetPasswordDTO
+    public class ResetPasswordRequest
     {
         public string Id { get; set; }
         public string Code { get; set; }
