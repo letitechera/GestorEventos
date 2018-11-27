@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorEventos.WebApi.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/events")]
     public class EventsController : Controller
     {
@@ -73,7 +73,7 @@ namespace GestorEventos.WebApi.Controllers
 
         [Route("CancelEvent")]
         [HttpPost]
-        public IActionResult PostTopic([FromBody]int eventId)
+        public IActionResult CancelEvent([FromBody]int eventId)
         {
             if (_eventsLogic.CancelEvent(eventId))
             {
@@ -82,9 +82,20 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("CreateEventTopic")]
+        [Route("RegisterToEvent")]
+        [HttpPut]
+        public IActionResult RegisterToEvent([FromBody]int eventId, [FromBody]Attendant attendant)
+        {
+            if (_eventsLogic.RegisterToEvent(eventId, attendant))
+            {
+                return Ok();
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [Route("CreateTopic")]
         [HttpPost]
-        public IActionResult PostTopic([FromBody]string topicName)
+        public IActionResult CreateEventTopic([FromBody]string topicName)
         {
             if (_eventsLogic.CreateEventTopic(topicName))
             {
@@ -94,13 +105,20 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpDelete("DeleteTopic/{id}")]
-        public IActionResult DeleteTopic(int eventId)
+        public IActionResult DeleteEventTopic(int topicId)
         {
-            if (_eventsLogic.DeleteEvent(eventId))
+            if (_eventsLogic.DeleteEventTopic(topicId))
             {
                 return Ok();
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [Route("topics")]
+        [HttpGet]
+        public IEnumerable<EventTopic> GetAllTopics()
+        {
+            return _eventsLogic.GetAllTopics();
         }
     }
 }

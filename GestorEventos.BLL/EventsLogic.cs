@@ -1,26 +1,38 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace GestorEventos.BLL
 {
     public class EventsLogic : IEventsLogic
     {
-        readonly IRepository<Event> _eventsRepository;
-        readonly IRepository<EventTopic> _topicsRepository;
-        readonly IRepository<EventSchedule> _schedulesRepository;
-        readonly IRepository<Participant> _participantRepository;
+        private readonly IRepository<Event> _eventsRepository;
+        private readonly IRepository<EventTopic> _topicsRepository;
+        private readonly IRepository<EventSchedule> _schedulesRepository;
+        private readonly IRepository<Participant> _participantRepository;
+        private readonly IRepository<Attendant> _attendantsRepository;
+        private readonly IAccreditationLogic _accreditationLogic;
+        private readonly IMailingLogic _mailingLogic;
+        private readonly IImagesLogic _imagesLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
-            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository)
+            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            IMailingLogic mailingLogic, IImagesLogic imagesLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
             _participantRepository = participantRepository;
             _topicsRepository = topicsRepository;
+            _attendantsRepository = attendantsRepository;
+            _accreditationLogic = accreditationLogic;
+            _mailingLogic = mailingLogic;
+            _imagesLogic = imagesLogic;
         }
 
         #region Events
@@ -48,9 +60,23 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool LoadImage()
+        public bool SaveImage(int eventId, FileInfo image)
         {
-            return true;
+            try
+            {
+                var speakersBlob = "";
+                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+
+                var _event = _eventsRepository.FindById(eventId);
+                _event.Image = imageUrl;
+                _eventsRepository.Update(_event);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public bool DeleteEvent(int eventId)
@@ -92,6 +118,45 @@ namespace GestorEventos.BLL
             }
         }
 
+        public bool RegisterToEvent(int eventId, Attendant attendant)
+        {
+            var participant = new Participant
+            {
+                EventId = eventId
+            };
+
+            try
+            {
+                //Check if an attendant with the same Email exists
+                var existant = _attendantsRepository
+                    .List()
+                    .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
+
+                if (existant == null)
+                {
+                    participant.AttendantId = _attendantsRepository.Add(attendant);
+                }
+                else
+                {
+                    participant.AttendantId = existant.Id;
+                }
+
+                //Generate QR Code
+                participant.QRCode = _accreditationLogic.GenerateQRCode();
+
+                _participantRepository.Add(participant);
+
+                //Send Email with QR to Participant
+                _mailingLogic.SendQRCodeEmail(participant);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool CancelEvent(int eventId)
         {
             try
@@ -101,7 +166,8 @@ namespace GestorEventos.BLL
 
                 SaveEvent(canceled, true);
 
-                //TODO: SEND EMAIL TO PARTICIPANTS
+                //TODO: 
+                _mailingLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
@@ -149,6 +215,11 @@ namespace GestorEventos.BLL
             {
                 throw e;
             }
+        }
+
+        public IEnumerable<EventTopic> GetAllTopics()
+        {
+            return _topicsRepository.List();
         }
 
         #endregion
