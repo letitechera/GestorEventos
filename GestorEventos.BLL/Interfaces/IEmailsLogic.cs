@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GestorEventos.BLL.Interfaces
 {
-    public interface IMailingLogic
+    public interface IEmailsLogic
     {
         bool SendQRCodeEmail(Participant participant);
         bool SendCancelationEmails(int eventId);
