@@ -17,10 +17,12 @@ namespace GestorEventos.BLL.Interfaces
 
         bool CancelEvent(int eventId);
 
+        bool RegisterToEvent(int eventId, Attendant attendant);
+
         bool CreateEventTopic(string topicName);
 
         bool DeleteEventTopic(int topicId);
 
-        bool RegisterToEvent(int eventId, Attendant attendant);
+        IEnumerable<EventTopic> GetAllTopics();
     }
 }

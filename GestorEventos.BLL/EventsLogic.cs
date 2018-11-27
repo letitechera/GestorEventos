@@ -217,6 +217,11 @@ namespace GestorEventos.BLL
             }
         }
 
+        public IEnumerable<EventTopic> GetAllTopics()
+        {
+            return _topicsRepository.List();
+        }
+
         #endregion
 
         #region Private Methods

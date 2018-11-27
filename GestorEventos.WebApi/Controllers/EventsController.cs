@@ -113,5 +113,12 @@ namespace GestorEventos.WebApi.Controllers
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
+
+        [Route("topics")]
+        [HttpGet]
+        public IEnumerable<EventTopic> GetAllTopics()
+        {
+            return _eventsLogic.GetAllTopics();
+        }
     }
 }
