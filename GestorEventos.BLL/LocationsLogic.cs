@@ -8,7 +8,7 @@ namespace GestorEventos.BLL
 {
     public class LocationsLogic : ILocationsLogic
     {
-        readonly IRepository<Location> _locationsRepository;
+        private readonly IRepository<Location> _locationsRepository;
 
         public LocationsLogic(IRepository<Location> locationsRepository)
         {

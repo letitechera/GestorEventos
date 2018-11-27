@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
@@ -10,24 +11,26 @@ namespace GestorEventos.BLL
 {
     public class EventsLogic : IEventsLogic
     {
-        readonly IRepository<Event> _eventsRepository;
-        readonly IRepository<EventTopic> _topicsRepository;
-        readonly IRepository<EventSchedule> _schedulesRepository;
-        readonly IRepository<Participant> _participantRepository;
-        readonly IRepository<Attendant> _attendantsRepository;
-        readonly IAccreditationLogic _accreditationLogic;
-        readonly IMailingLogic _mailingLogic;
+        private readonly IRepository<Event> _eventsRepository;
+        private readonly IRepository<EventTopic> _topicsRepository;
+        private readonly IRepository<EventSchedule> _schedulesRepository;
+        private readonly IRepository<Participant> _participantRepository;
+        private readonly IRepository<Attendant> _attendantsRepository;
+        private readonly IAccreditationLogic _accreditationLogic;
+        private readonly IImagesLogic _imagesLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
-            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository, 
-            IAccreditationLogic accreditationLogic, IMailingLogic mailingLogic)
+            IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
+            IImagesLogic imagesLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
             _participantRepository = participantRepository;
             _topicsRepository = topicsRepository;
+            _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
-            _mailingLogic = mailingLogic;
+            _imagesLogic = imagesLogic;
         }
 
         #region Events
@@ -55,9 +58,23 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool LoadImage()
+        public bool SaveImage(int eventId, FileInfo image)
         {
-            return true;
+            try
+            {
+                var speakersBlob = "";
+                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+
+                var _event = _eventsRepository.FindById(eventId);
+                _event.Image = imageUrl;
+                _eventsRepository.Update(_event);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public bool DeleteEvent(int eventId)
@@ -109,9 +126,9 @@ namespace GestorEventos.BLL
             try
             {
                 //Check if an attendant with the same Email exists
-                var existant = _attendantsRepository.List()
-                    .Where(x => x.Email.ToLower() == attendant.Email.ToLower())
-                    .FirstOrDefault();
+                var existant = _attendantsRepository
+                    .List()
+                    .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
 
                 if (existant == null)
                 {
@@ -128,7 +145,7 @@ namespace GestorEventos.BLL
                 _participantRepository.Add(participant);
 
                 //Send Email with QR to Participant
-                _mailingLogic.SendQRCodeEmail(participant);
+                //_emailsLogic.SendQRCodeEmail(participant);
 
                 return true;
             }
@@ -148,7 +165,7 @@ namespace GestorEventos.BLL
                 SaveEvent(canceled, true);
 
                 //TODO: 
-                _mailingLogic.SendCancelationEmails(eventId);
+                //_emailsLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
@@ -196,6 +213,11 @@ namespace GestorEventos.BLL
             {
                 throw e;
             }
+        }
+
+        public IEnumerable<EventTopic> GetAllTopics()
+        {
+            return _topicsRepository.List();
         }
 
         #endregion
