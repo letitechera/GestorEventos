@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 
 namespace GestorEventos.BLL
 {
-    public class ActivitiesLogic
+    public class ActivitiesLogic: IActivitiesLogic
     {
         private readonly IRepository<Activity> _activitiesRepository;
 

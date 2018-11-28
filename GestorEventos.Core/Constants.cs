@@ -10,10 +10,7 @@
         public const string DefaultAdmin_Email = "default@admin.com";
         public const string DefaultAdmin_Password = "Password01";
 
-        //MailChimp
-        public const int MailChimp_ContactListId = 1234;
-        public const string MailChimp_MergeFieldType_Url = "url";
-        public const string MailChimp_MergeFieldType_Text = "text";
-        public const string MailChimp_MergeFieldHelp_Event = "Field for events distribution";
+        public const string SendGridAuthLink_ConfirmEmail = "?userID={0}&code={1}";
+        public const string SendGridAuthLink_ResetPassword = "?userID={0}&code={1}";
     }
 }
