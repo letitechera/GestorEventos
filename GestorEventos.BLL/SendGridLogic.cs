@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Core;
@@ -14,44 +15,92 @@ namespace GestorEventos.BLL
         readonly IConfiguration _configuration;
         private readonly SendGridClient _client;
         private readonly SendGridOptions _options;
+        private readonly EmailAddress _from;
 
         public SendGridLogic(IConfiguration configuration)
         {
 
             _configuration = configuration;
-            _configuration.GetSection("SendGridOptions").Bind(_options);
+            _options = new SendGridOptions();
+            _configuration.Bind("SendGridOptions", _options);
             _client = new SendGridClient(_options.APIKeyValue);
+            _from = new EmailAddress(_options.FromEmail, _options.FromName);
         }
 
-        public async Task<Response> SendSingleMail(string recipName, string recipEmail)
+        public async Task<Response> SendEmailValidation(string recipName, string recipEmail, string linkUrl)
         {
-            var from = new EmailAddress(_options.FromEmail, _options.FromName);
-            var subject = Constants.SendGrid_NewEventSubject;
-            var to = new EmailAddress(recipEmail, recipName);
-            var plainTextContent = "and easy to do anywhere, even with C#";
-            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var templateId = _options.TemplateEmailValidation;
+
+            return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
+        }
+
+        public async Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl)
+        {
+            var templateId = _options.TemplatePasswordReset;
+
+            return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
+        }
+
+        public async Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl)
+        {
+            var templateId = _options.TemplateUserRegistrationAlert;
+
+            return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
+        }
+
+        //public Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
+
+        #region Private Methods
+
+        private async Task<Response> SendRegistrationEmail(string recipName, string recipEmail, string templateId, string linkUrl)
+        {
+            var recipient = new EmailAddress(recipEmail, recipName);
+            var substitutions = new Dictionary<string, string>
+            {
+                {
+                    Constants.SendGrid_Substitution_UserName, recipName
+                },
+                {
+                    Constants.SendGrid_Substitution_LinkUrl, linkUrl
+                }
+            };
+
+            return await SendTemplateEmail(recipient, templateId, substitutions);
+        }
+
+        private async Task<Response> SendTemplateEmail(EmailAddress recipient, string templateId, Dictionary<string, string> substitutions)
+        {
+            var msg = new SendGridMessage();
+
+            msg.SetFrom(_from);
+
+            var recipients = new List<EmailAddress> { recipient };
+            msg.AddTos(recipients);
+
+            //msg.AddSubstitutions(substitutions);
+            msg.TemplateId = templateId;
+
             return await _client.SendEmailAsync(msg);
         }
 
-        public Task<Response> SendEmailValidation(string recipName, string recipEmail, string linkUrl)
+        public async Task<Response> SendHtmlEmail(EmailAddress recipient, string body, string subject)
         {
-            throw new System.NotImplementedException();
+            var msg = new SendGridMessage();
+
+            msg.SetFrom(_from);
+
+            var recipients = new List<EmailAddress> { recipient };
+            msg.AddTos(recipients);
+
+            msg.SetSubject(subject);
+            msg.AddContent(MimeType.Html, body);
+
+            return await _client.SendEmailAsync(msg);
         }
 
-        public Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl)
-        {
-            throw new System.NotImplementedException();
-        }
+        #endregion
     }
 }
