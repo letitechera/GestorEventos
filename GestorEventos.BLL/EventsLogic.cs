@@ -125,7 +125,7 @@ namespace GestorEventos.BLL
 
             try
             {
-                //Check if an attendant with the same Email exists
+                // Check if an attendant with the same Email exists
                 var existant = _attendantsRepository
                     .List()
                     .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
@@ -139,13 +139,13 @@ namespace GestorEventos.BLL
                     participant.AttendantId = existant.Id;
                 }
 
-                //Generate QR Code
+                // Generate QR Code
                 participant.QRCode = _accreditationLogic.GenerateQRCode();
 
                 _participantRepository.Add(participant);
 
-                //Send Email with QR to Participant
-                //_emailsLogic.SendQRCodeEmail(participant);
+                // Send Email with QR to Participant
+                // _emailsLogic.SendQRCodeEmail(participant);
 
                 return true;
             }

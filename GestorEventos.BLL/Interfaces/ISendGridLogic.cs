@@ -8,6 +8,6 @@ namespace GestorEventos.BLL.Interfaces
         Task<Response> SendEmailValidation(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl);
-        Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl);
+        //Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl);
     }
 }
