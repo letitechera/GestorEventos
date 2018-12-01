@@ -12,8 +12,8 @@
 
         public const string SendGridAuthLink_ConfirmEmail = "?userID={0}&code={1}";
         public const string SendGridAuthLink_ResetPassword = "?userID={0}&code={1}";
-        public const string SendGrid_Substitution_UserName = "-participantName-";
-        public const string SendGrid_Substitution_LinkUrl = "-linkUrl-";
+        public const string SendGrid_Substitution_UserName = "participantName";
+        public const string SendGrid_Substitution_LinkUrl = "linkUrl";
         public const string SendGrid_NewEventSubject = "Check out this new Event";
 
 

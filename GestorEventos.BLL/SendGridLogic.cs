@@ -5,6 +5,7 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.Core;
 using GestorEventos.WebApi.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -58,20 +59,17 @@ namespace GestorEventos.BLL
         private async Task<Response> SendRegistrationEmail(string recipName, string recipEmail, string templateId, string linkUrl)
         {
             var recipient = new EmailAddress(recipEmail, recipName);
-            var substitutions = new Dictionary<string, string>
+
+            var dynamicTemplateData = new TemplateData
             {
-                {
-                    Constants.SendGrid_Substitution_UserName, recipName
-                },
-                {
-                    Constants.SendGrid_Substitution_LinkUrl, linkUrl
-                }
+                ParticipantName = recipName,
+                LinkUrl = linkUrl
             };
 
-            return await SendTemplateEmail(recipient, templateId, substitutions);
+            return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
         }
 
-        private async Task<Response> SendTemplateEmail(EmailAddress recipient, string templateId, Dictionary<string, string> substitutions)
+        private async Task<Response> SendTemplateEmail(EmailAddress recipient, string templateId, TemplateData dynamicTemplateData)
         {
             var msg = new SendGridMessage();
 
@@ -80,7 +78,7 @@ namespace GestorEventos.BLL
             var recipients = new List<EmailAddress> { recipient };
             msg.AddTos(recipients);
 
-            //msg.AddSubstitutions(substitutions);
+            msg.SetTemplateData(dynamicTemplateData);
             msg.TemplateId = templateId;
 
             return await _client.SendEmailAsync(msg);
@@ -99,6 +97,17 @@ namespace GestorEventos.BLL
             msg.AddContent(MimeType.Html, body);
 
             return await _client.SendEmailAsync(msg);
+        }
+
+        //DYNAMIC DATA HELPER:
+
+        private class TemplateData
+        {
+            [JsonProperty("participantName")]
+            public string ParticipantName { get; set; }
+
+            [JsonProperty("linkUrl")]
+            public string LinkUrl { get; set; }
         }
 
         #endregion
