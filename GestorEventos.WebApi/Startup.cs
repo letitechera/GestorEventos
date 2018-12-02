@@ -65,6 +65,7 @@ namespace GestorEventos.WebApi
             //Logic Services
             services.TryAddTransient<IAccreditationLogic, AccreditationLogic>();
             services.TryAddTransient<IActivitiesLogic, ActivitiesLogic>();
+            services.TryAddTransient<IAttendantsLogic, AttendantsLogic>();
             services.TryAddTransient<IAuthLogic, AuthLogic>();
             services.TryAddTransient<IEventsLogic, EventsLogic>();
             services.TryAddTransient<IImagesLogic, ImagesLogic>();
