@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace GestorEventos.Models.Entities
@@ -14,5 +15,14 @@ namespace GestorEventos.Models.Entities
         public float Latitude { get; set; }
         public float Longitude { get; set; }
         public int Capacity { get; set; }
+
+        [NotMapped]
+        public string PrettyLocationAddress
+        {
+            get
+            {
+                return Address1 + ", " + (Address2 + ", " ?? "") + City;
+            }
+        }
     }
 }

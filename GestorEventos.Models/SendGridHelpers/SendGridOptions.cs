@@ -16,5 +16,6 @@ namespace GestorEventos.WebApi.Models
         public string TemplateUserRegistrationAlert { get; set; }
         public string TemplateNewEvent { get; set; }
         public string TemplateRegistrationSuccess { get; set; }
+        public string TemplateParticipantCode { get; set; }
     }
 }
