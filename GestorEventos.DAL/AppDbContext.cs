@@ -25,7 +25,6 @@ namespace GestorEventos.DAL
         public DbSet<EventSchedule> EventSchedules { get; set; }
         public DbSet<EventTopic> EventTopics { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<Speaker> Speakers { get; set; }
 

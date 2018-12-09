@@ -5,7 +5,6 @@ using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
-using Microsoft.Extensions.Logging;
 
 namespace GestorEventos.BLL
 {
@@ -18,11 +17,12 @@ namespace GestorEventos.BLL
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
         private readonly IImagesLogic _imagesLogic;
+        private readonly ISendGridLogic _sendgridLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
             IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
-            IImagesLogic imagesLogic)
+            IImagesLogic imagesLogic, ISendGridLogic sendgridLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -31,6 +31,7 @@ namespace GestorEventos.BLL
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
             _imagesLogic = imagesLogic;
+            _sendgridLogic = sendgridLogic;
         }
 
         #region Events
@@ -145,13 +146,34 @@ namespace GestorEventos.BLL
                 _participantRepository.Add(participant);
 
                 // Send Email with QR to Participant
-                // _emailsLogic.SendQRCodeEmail(participant);
+                _sendgridLogic.SendQRCodeEmail(participant);
 
                 return true;
             }
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        public bool UnregisterParticipant(int eventId, int participantId)
+        {
+            try
+            {
+                var existant = _participantRepository
+                    .List(p => p.EventId == eventId && p.Id == participantId)
+                    .FirstOrDefault();
+
+                if (existant != null)
+                {
+                    _participantRepository.Delete(participantId);
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 

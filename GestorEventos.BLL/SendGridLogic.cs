@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Core;
+using GestorEventos.DAL.Repositories.Interfaces;
+using GestorEventos.Models.Entities;
+using GestorEventos.Models.SendGridHelpers;
 using GestorEventos.WebApi.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -14,19 +17,26 @@ namespace GestorEventos.BLL
     public class SendGridLogic : ISendGridLogic
     {
         readonly IConfiguration _configuration;
+        readonly IRepository<Attendant> _attendantsRepository;
+        readonly IRepository<Event> _eventsRepository;
         private readonly SendGridClient _client;
         private readonly SendGridOptions _options;
         private readonly EmailAddress _from;
 
-        public SendGridLogic(IConfiguration configuration)
+        public SendGridLogic(IConfiguration configuration, IRepository<Attendant> attendantsRepository,
+            IRepository<Event> eventsRepository)
         {
-
+            _attendantsRepository = attendantsRepository;
+            _eventsRepository = eventsRepository;
             _configuration = configuration;
+
             _options = new SendGridOptions();
             _configuration.Bind("SendGridOptions", _options);
             _client = new SendGridClient(_options.APIKeyValue);
             _from = new EmailAddress(_options.FromEmail, _options.FromName);
         }
+
+        #region Auth Mailing
 
         public async Task<Response> SendEmailValidation(string recipName, string recipEmail, string linkUrl)
         {
@@ -49,10 +59,28 @@ namespace GestorEventos.BLL
             return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
         }
 
-        //public Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
+        #endregion
+
+        #region Events Mailing
+
+
+        #endregion
+
+        #region Accreditations Mailing
+
+        public async Task<Response> SendQRCodeEmail(Participant participant)
+        {
+            var attendant = _attendantsRepository.FindById(participant.AttendantId);
+            var _event = _eventsRepository.FindById(participant.EventId);
+
+            var recipient = new EmailAddress(attendant.Email, attendant.FullName);
+            var templateId = _options.TemplateParticipantCode;
+            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, participant.QRCode);
+
+            return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
+        }
+
+        #endregion
 
         #region Private Methods
 
@@ -60,16 +88,16 @@ namespace GestorEventos.BLL
         {
             var recipient = new EmailAddress(recipEmail, recipName);
 
-            var dynamicTemplateData = new TemplateData
+            var dynamicTemplateData = new AuthEmailData
             {
-                ParticipantName = recipName,
+                RecipientName = recipName,
                 LinkUrl = linkUrl
             };
 
             return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
         }
 
-        private async Task<Response> SendTemplateEmail(EmailAddress recipient, string templateId, TemplateData dynamicTemplateData)
+        private async Task<Response> SendTemplateEmail(EmailAddress recipient, string templateId, DynamicData dynamicTemplateData)
         {
             var msg = new SendGridMessage();
 
@@ -97,17 +125,6 @@ namespace GestorEventos.BLL
             msg.AddContent(MimeType.Html, body);
 
             return await _client.SendEmailAsync(msg);
-        }
-
-        //DYNAMIC DATA HELPER:
-
-        private class TemplateData
-        {
-            [JsonProperty("participantName")]
-            public string ParticipantName { get; set; }
-
-            [JsonProperty("linkUrl")]
-            public string LinkUrl { get; set; }
         }
 
         #endregion
