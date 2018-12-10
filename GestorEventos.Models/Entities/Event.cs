@@ -13,7 +13,7 @@ namespace GestorEventos.Models.Entities
         public string Image { get; set; }
         public string Description { get; set; }
         public int LocationId { get; set; }
-        public int AppUserId { get; set; }
+        public string AppUserId { get; set; }
         public int EventTopicId { get; set; }
         public bool? Canceled { get; set; }
         public IList<EventSchedule> Schedules { get; set; }
