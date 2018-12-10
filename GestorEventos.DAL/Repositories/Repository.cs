@@ -71,9 +71,8 @@ namespace GestorEventos.DAL.Repositories
                 entity.CreatedDate = oldEntity.CreatedDate;
                 entity.CreatedByName = oldEntity.CreatedByName;
                 entity.CreatedById = oldEntity.CreatedById;
+                _context.Entry(oldEntity).CurrentValues.SetValues(entity);
             }
-
-            _dbset.Update(entity);
             SaveChanges();
         }
 
