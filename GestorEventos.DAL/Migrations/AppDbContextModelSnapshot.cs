@@ -237,8 +237,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<int>("EventTopicId");
 
@@ -254,8 +253,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
@@ -280,8 +278,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<int>("EventId");
 

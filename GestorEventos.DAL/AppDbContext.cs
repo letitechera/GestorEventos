@@ -57,18 +57,6 @@ namespace GestorEventos.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Event>()
-            .Property(f => f.EndDate)
-            .HasColumnType("datetime");
-
-            modelBuilder.Entity<Event>()
-            .Property(f => f.StartDate)
-            .HasColumnType("datetime");
-
-            modelBuilder.Entity<EventSchedule>()
-            .Property(f => f.Date)
-            .HasColumnType("datetime");
-
             modelBuilder.Entity<AppUser>()
             .Property(f => f.DateOfBirth)
             .HasColumnType("datetime");
