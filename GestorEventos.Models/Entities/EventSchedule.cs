@@ -6,7 +6,7 @@ namespace GestorEventos.Models.Entities
 {
     public class EventSchedule: BaseEntity
     {
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public int EventId { get; set; }
         public IList<Activity> Activities { get; set; }
 

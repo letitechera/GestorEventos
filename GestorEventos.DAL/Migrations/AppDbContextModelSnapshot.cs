@@ -95,7 +95,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Description");
 
@@ -236,7 +237,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("EventTopicId");
 
@@ -252,7 +254,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
 
@@ -277,7 +280,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("EventId");
 

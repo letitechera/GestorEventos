@@ -42,15 +42,36 @@ namespace GestorEventos.DAL
             {
                 if (entity.State == EntityState.Added)
                 {
-                    ((BaseEntity)entity.Entity).CreatedDate = DateTime.UtcNow;
+                    ((BaseEntity)entity.Entity).CreatedDate = DateTime.Now;
                     //((BaseEntity)entity.Entity).UserCreated = userName;
                     //((BaseEntity)entity.Entity).UserCreatedId = userId;
                 }
 
-                ((BaseEntity)entity.Entity).ModifiedDate = DateTime.UtcNow;
+                ((BaseEntity)entity.Entity).ModifiedDate = DateTime.Now;
                 //((BaseEntity)entity.Entity).ModifiedByName = currentUsername;
                 //((BaseEntity)entity.Entity).ModifiedById = userId;
             }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Event>()
+            .Property(f => f.EndDate)
+            .HasColumnType("datetime");
+
+            modelBuilder.Entity<Event>()
+            .Property(f => f.StartDate)
+            .HasColumnType("datetime");
+
+            modelBuilder.Entity<EventSchedule>()
+            .Property(f => f.Date)
+            .HasColumnType("datetime");
+
+            modelBuilder.Entity<AppUser>()
+            .Property(f => f.DateOfBirth)
+            .HasColumnType("datetime");
         }
 
     }
