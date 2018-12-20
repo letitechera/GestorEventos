@@ -11,10 +11,12 @@ namespace GestorEventos.DAL
 {
     public class AppDbContext : IdentityDbContext<AppUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        private IHttpContextAccessor _httpContextAccessor;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor)
             : base(options)
         {
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public DbSet<Activity> Activities { get; set; }
@@ -40,16 +42,24 @@ namespace GestorEventos.DAL
 
             foreach (var entity in entities)
             {
+                var userNameClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.First();
+
+                var userIdClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.FirstOrDefault(c => c.Type == "id")?.Value;
+
+                var currentUsername = !string.IsNullOrEmpty(userNameClaim?.Value)
+                    ? userNameClaim.Value
+                    : "Anonymous";
+
                 if (entity.State == EntityState.Added)
                 {
                     ((BaseEntity)entity.Entity).CreatedDate = DateTime.Now;
-                    //((BaseEntity)entity.Entity).UserCreated = userName;
-                    //((BaseEntity)entity.Entity).UserCreatedId = userId;
+                    ((BaseEntity)entity.Entity).CreatedByName = currentUsername;
+                    ((BaseEntity)entity.Entity).CreatedById = userIdClaim;
                 }
 
                 ((BaseEntity)entity.Entity).ModifiedDate = DateTime.Now;
-                //((BaseEntity)entity.Entity).ModifiedByName = currentUsername;
-                //((BaseEntity)entity.Entity).ModifiedById = userId;
+                ((BaseEntity)entity.Entity).ModifiedByName = currentUsername;
+                ((BaseEntity)entity.Entity).ModifiedById = userIdClaim;
             }
         }
 

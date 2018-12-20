@@ -7,6 +7,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using GestorEventos.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace GestorEventos.WebApi.Auth
 {
@@ -28,7 +30,7 @@ namespace GestorEventos.WebApi.Auth
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
-                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id)
+                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id),
              };
 
             // Create the JWT security token and encode it.
