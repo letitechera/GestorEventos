@@ -7,6 +7,7 @@ namespace GestorEventos.Models.WebApiModels
 {
     public class EventUI
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
@@ -21,6 +22,7 @@ namespace GestorEventos.Models.WebApiModels
 
         public EventUI(Event _event)
         {
+            Id = _event.Id;
             Name = _event.Name;
             Description = _event.Description;
             Image = _event.Name;
