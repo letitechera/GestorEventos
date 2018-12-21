@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 
 namespace GestorEventos.BLL.Interfaces
 {
@@ -12,6 +13,8 @@ namespace GestorEventos.BLL.Interfaces
         bool DeleteEvent(int eventId);
 
         IEnumerable<Event> GetEvents();
+
+        IEnumerable<EventUI> GetEvents(string userId);
 
         Event GetEvent(int eventId);
 

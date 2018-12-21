@@ -225,8 +225,6 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppUserId");
-
                     b.Property<bool?>("Canceled");
 
                     b.Property<string>("CreatedById");
@@ -256,8 +254,6 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("EventTopicId");
 
@@ -572,10 +568,6 @@ namespace GestorEventos.DAL.Migrations
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Event", b =>
                 {
-                    b.HasOne("GestorEventos.Models.Entities.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("GestorEventos.Models.Entities.EventTopic", "EventTopic")
                         .WithMany()
                         .HasForeignKey("EventTopicId")
