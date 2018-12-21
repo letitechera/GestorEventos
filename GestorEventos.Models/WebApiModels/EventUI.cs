@@ -20,18 +20,18 @@ namespace GestorEventos.Models.WebApiModels
         public string CreatedByName { get; set; }
         public string CreatedById { get; set; }
 
-        public EventUI(Event _event)
+        public EventUI(Event _event, string location, string topic)
         {
             Id = _event.Id;
             Name = _event.Name;
             Description = _event.Description;
             Image = _event.Name;
-            Location = _event.Location != null ? _event.Location.Name : "N/A";
+            Location = location ?? "N/A";
             StartDate = _event.PrettyShortStartDate;
             FinishDate = _event.PrettyShortEndDate;
             StartTime = _event.PrettyStartTime;
             FinishTime = _event.PrettyEndTime;
-            Topic = _event.EventTopic != null ? _event.EventTopic.Name : "N/A";
+            Topic = topic ?? "N/A";
             CreatedByName = _event.CreatedByName;
             CreatedById = _event.CreatedById;
         }
