@@ -72,5 +72,11 @@ namespace GestorEventos.DAL
             .HasColumnType("datetime");
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
+
     }
 }

@@ -12,12 +12,9 @@ namespace GestorEventos.Models.WebApiModels
         public string Description { get; set; }
         public string Image { get; set; }
         public string Location { get; set; }
-        public string StartDate { get; set; }
-        public string FinishDate { get; set; }
-        public string StartTime { get; set; }
-        public string FinishTime { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime FinishDate { get; set; }
         public string Topic { get; set; }
-        public string CreatedByName { get; set; }
         public string CreatedById { get; set; }
 
         public EventUI(Event _event, string location, string topic)
@@ -27,12 +24,9 @@ namespace GestorEventos.Models.WebApiModels
             Description = _event.Description;
             Image = _event.Name;
             Location = location ?? "N/A";
-            StartDate = _event.PrettyShortStartDate;
-            FinishDate = _event.PrettyShortEndDate;
-            StartTime = _event.PrettyStartTime;
-            FinishTime = _event.PrettyEndTime;
+            StartDate = _event.StartDate;
+            FinishDate = _event.EndDate;
             Topic = topic ?? "N/A";
-            CreatedByName = _event.CreatedByName;
             CreatedById = _event.CreatedById;
         }
     }
