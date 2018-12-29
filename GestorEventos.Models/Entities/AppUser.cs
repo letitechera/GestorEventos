@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace GestorEventos.Models.Entities
@@ -14,5 +15,14 @@ namespace GestorEventos.Models.Entities
         public string Phone1 { get; set; }
         public string Phone2 { get; set; }
         public string Description { get; set; }
+
+        [NotMapped]
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }

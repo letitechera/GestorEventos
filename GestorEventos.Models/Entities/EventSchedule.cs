@@ -8,7 +8,7 @@ namespace GestorEventos.Models.Entities
     {
         public DateTime? Date { get; set; }
         public int EventId { get; set; }
-        public IList<Activity> Activities { get; set; }
+        public virtual IList<Activity> Activities { get; set; }
 
         public virtual Event Event { get; set; }
     }

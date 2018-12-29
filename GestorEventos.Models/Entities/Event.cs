@@ -7,7 +7,6 @@ namespace GestorEventos.Models.Entities
 {
     public class Event: BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -16,8 +15,8 @@ namespace GestorEventos.Models.Entities
         public int LocationId { get; set; }
         public int EventTopicId { get; set; }
         public bool? Canceled { get; set; }
-        public IList<EventSchedule> Schedules { get; set; }
-        public IList<Participant> Participants { get; set; }
+        public virtual IList<EventSchedule> Schedules { get; set; }
+        public virtual IList<Participant> Participants { get; set; }
 
         public virtual Location Location { get; set; }
         public virtual EventTopic EventTopic { get; set; }
@@ -27,7 +26,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return StartDate.ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return StartDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -36,7 +35,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return EndDate.ToString("dddd d MMMM, yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return EndDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -45,7 +44,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return StartDate.ToString("dddd d MMMM, yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return StartDate.ToString("dddd d MMMM, yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -54,7 +53,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return EndDate.ToString("dddd d MMMM, yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return EndDate.ToString("dddd d MMMM, yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -63,7 +62,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return StartDate.ToString("hh:mm tt");
+                return StartDate.ToString("hh:mm");
             }
         }
 
@@ -72,7 +71,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return EndDate.ToString("hh:mm tt");
+                return EndDate.ToString("hh:mm");
             }
         }
     }
