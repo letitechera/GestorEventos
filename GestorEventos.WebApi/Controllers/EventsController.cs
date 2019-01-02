@@ -120,5 +120,13 @@ namespace GestorEventos.WebApi.Controllers
         {
             return _eventsLogic.GetAllTopics();
         }
+
+        [Route("accredit")]
+        [HttpGet]
+        public IActionResult Accredit(string qrCode)
+        {
+            var result = _eventsLogic.Accredit(qrCode);
+            return Ok(result);
+        }
     }
 }

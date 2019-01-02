@@ -272,6 +272,11 @@ namespace GestorEventos.BLL
             }
         }
 
+        public bool Accredit(string qrCode)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

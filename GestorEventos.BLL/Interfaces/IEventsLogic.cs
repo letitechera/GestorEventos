@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using GestorEventos.Models.Entities;
 
 namespace GestorEventos.BLL.Interfaces
@@ -24,5 +22,7 @@ namespace GestorEventos.BLL.Interfaces
         bool DeleteEventTopic(int topicId);
 
         IEnumerable<EventTopic> GetAllTopics();
+
+        bool Accredit(string qrCode);
     }
 }
