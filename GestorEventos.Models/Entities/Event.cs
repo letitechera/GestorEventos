@@ -22,24 +22,6 @@ namespace GestorEventos.Models.Entities
         public virtual EventTopic EventTopic { get; set; }
 
         [NotMapped]
-        public string PrettyShortStartDate
-        {
-            get
-            {
-                return StartDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
-            }
-        }
-
-        [NotMapped]
-        public string PrettyShortEndDate
-        {
-            get
-            {
-                return EndDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
-            }
-        }
-
-        [NotMapped]
         public string PrettyStartDate
         {
             get

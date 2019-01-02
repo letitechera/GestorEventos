@@ -22,7 +22,7 @@ namespace GestorEventos.Models.WebApiModels
             Id = _event.Id;
             Name = _event.Name;
             Description = _event.Description;
-            Image = _event.Name;
+            Image = _event.Image;
             Location = location ?? "N/A";
             StartDate = _event.StartDate;
             FinishDate = _event.EndDate;
