@@ -47,7 +47,7 @@ namespace GestorEventos.WebApi
 
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
-            
+
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.TryAddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -150,6 +150,11 @@ namespace GestorEventos.WebApi
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:4200")
+                       .AllowAnyHeader()
+            );
 
             app.UseExceptionHandler(
              builder =>

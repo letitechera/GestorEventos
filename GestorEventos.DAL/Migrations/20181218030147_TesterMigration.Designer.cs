@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestorEventos.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20181105171450_EventCancel")]
-    partial class EventCancel
+    [Migration("20181218030147_TesterMigration")]
+    partial class TesterMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,13 +92,15 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Address");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
+                    b.Property<string>("Description");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -108,6 +110,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<bool>("Enabled");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<string>("Image");
 
                     b.Property<string>("LastName");
 
@@ -122,6 +126,10 @@ namespace GestorEventos.DAL.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
+
+                    b.Property<string>("Phone1");
+
+                    b.Property<string>("Phone2");
 
                     b.Property<string>("PhoneNumber");
 
@@ -145,8 +153,6 @@ namespace GestorEventos.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("AppUser");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Attendant", b =>
@@ -184,6 +190,10 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("BadgeImage");
+
+                    b.Property<string>("Content");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
@@ -202,6 +212,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("TemplateId");
 
+                    b.Property<string>("Title");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParticipantId");
@@ -215,6 +227,8 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AppUserId");
+
                     b.Property<bool?>("Canceled");
 
                     b.Property<string>("CreatedById");
@@ -225,7 +239,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("EventTopicId");
 
@@ -241,21 +256,18 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("OrganizerId");
-
-                    b.Property<string>("OrganizerId1");
-
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("EventTopicId");
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("OrganizerId1");
-
-                    b.ToTable("Event");
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventSchedule", b =>
@@ -270,7 +282,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("datetime");
 
                     b.Property<int>("EventId");
 
@@ -284,7 +297,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventSchedule");
+                    b.ToTable("EventSchedules");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventTopic", b =>
@@ -309,7 +322,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EventTopic");
+                    b.ToTable("EventTopics");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Location", b =>
@@ -348,7 +361,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Location");
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Participant", b =>
@@ -381,7 +394,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Participant");
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Speaker", b =>
@@ -424,7 +437,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Speaker");
+                    b.ToTable("Speakers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -541,27 +554,6 @@ namespace GestorEventos.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GestorEventos.Models.Entities.Organizer", b =>
-                {
-                    b.HasBaseType("GestorEventos.Models.Entities.AppUser");
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Image");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("OrganizationId");
-
-                    b.Property<string>("Phone");
-
-                    b.ToTable("Organizer");
-
-                    b.HasDiscriminator().HasValue("Organizer");
-                });
-
             modelBuilder.Entity("GestorEventos.Models.Entities.Activity", b =>
                 {
                     b.HasOne("GestorEventos.Models.Entities.ActivityType", "ActivityType")
@@ -585,6 +577,10 @@ namespace GestorEventos.DAL.Migrations
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Event", b =>
                 {
+                    b.HasOne("GestorEventos.Models.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("GestorEventos.Models.Entities.EventTopic", "EventTopic")
                         .WithMany()
                         .HasForeignKey("EventTopicId")
@@ -594,10 +590,6 @@ namespace GestorEventos.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GestorEventos.Models.Entities.Organizer", "Organizer")
-                        .WithMany("Events")
-                        .HasForeignKey("OrganizerId1");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventSchedule", b =>

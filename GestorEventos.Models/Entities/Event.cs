@@ -13,14 +13,12 @@ namespace GestorEventos.Models.Entities
         public string Image { get; set; }
         public string Description { get; set; }
         public int LocationId { get; set; }
-        public int OrganizerId { get; set; }
         public int EventTopicId { get; set; }
         public bool? Canceled { get; set; }
-        public IList<EventSchedule> Schedules { get; set; }
-        public IList<Participant> Participants { get; set; }
+        public virtual IList<EventSchedule> Schedules { get; set; }
+        public virtual IList<Participant> Participants { get; set; }
 
         public virtual Location Location { get; set; }
-        public virtual Organizer Organizer { get; set; }
         public virtual EventTopic EventTopic { get; set; }
 
         [NotMapped]
@@ -28,7 +26,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return StartDate.ToString("dddd d MMMM, yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return StartDate.ToString("dddd d MMMM, yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -37,7 +35,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return EndDate.ToString("dddd d MMMM, yyyy", CultureInfo.CreateSpecificCulture("en-US"));
+                return EndDate.ToString("dddd d MMMM, yyyy", CultureInfo.CurrentUICulture);
             }
         }
 
@@ -46,7 +44,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return StartDate.ToString("hh:mm hs");
+                return StartDate.ToString("hh:mm");
             }
         }
 
@@ -55,7 +53,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return EndDate.ToString("hh:mm hs");
+                return EndDate.ToString("hh:mm");
             }
         }
     }

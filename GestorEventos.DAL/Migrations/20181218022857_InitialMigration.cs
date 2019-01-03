@@ -63,14 +63,12 @@ namespace GestorEventos.DAL.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Enabled = table.Column<bool>(nullable: false),
-                    DateOfBirth = table.Column<DateTime>(nullable: false),
-                    Discriminator = table.Column<string>(nullable: false),
-                    OrganizationId = table.Column<int>(nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false),
                     Image = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true)
+                    Phone1 = table.Column<string>(nullable: true),
+                    Phone2 = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -99,27 +97,7 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Certificates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedByName = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    ModifiedByName = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Sent = table.Column<bool>(nullable: false),
-                    TemplateId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EventTopic",
+                name: "EventTopics",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -134,11 +112,11 @@ namespace GestorEventos.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EventTopic", x => x.Id);
+                    table.PrimaryKey("PK_EventTopics", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "Locations",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -160,7 +138,7 @@ namespace GestorEventos.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -270,7 +248,7 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
+                name: "Events",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -282,40 +260,40 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     Image = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     LocationId = table.Column<int>(nullable: false),
-                    OrganizerId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<string>(nullable: true),
                     EventTopicId = table.Column<int>(nullable: false),
-                    OrganizerId1 = table.Column<string>(nullable: true)
+                    Canceled = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Event", x => x.Id);
+                    table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Event_EventTopic_EventTopicId",
-                        column: x => x.EventTopicId,
-                        principalTable: "EventTopic",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Event_Location_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Location",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Event_AspNetUsers_OrganizerId1",
-                        column: x => x.OrganizerId1,
+                        name: "FK_Events_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Events_EventTopics_EventTopicId",
+                        column: x => x.EventTopicId,
+                        principalTable: "EventTopics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Events_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EventSchedule",
+                name: "EventSchedules",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -326,22 +304,22 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedByName = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
                     EventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EventSchedule", x => x.Id);
+                    table.PrimaryKey("PK_EventSchedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EventSchedule_Event_EventId",
+                        name: "FK_EventSchedules_Events_EventId",
                         column: x => x.EventId,
-                        principalTable: "Event",
+                        principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Participant",
+                name: "Participants",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -358,17 +336,17 @@ namespace GestorEventos.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Participant", x => x.Id);
+                    table.PrimaryKey("PK_Participants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participant_Attendants_AttendantId",
+                        name: "FK_Participants_Attendants_AttendantId",
                         column: x => x.AttendantId,
                         principalTable: "Attendants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Participant_Event_EventId",
+                        name: "FK_Participants_Events_EventId",
                         column: x => x.EventId,
-                        principalTable: "Event",
+                        principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -402,15 +380,45 @@ namespace GestorEventos.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Activities_EventSchedule_EventScheduleId",
+                        name: "FK_Activities_EventSchedules_EventScheduleId",
                         column: x => x.EventScheduleId,
-                        principalTable: "EventSchedule",
+                        principalTable: "EventSchedules",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Speaker",
+                name: "Certificates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedByName = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedByName = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    BadgeImage = table.Column<string>(nullable: true),
+                    Sent = table.Column<bool>(nullable: false),
+                    TemplateId = table.Column<string>(nullable: true),
+                    ParticipantId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Certificates_Participants_ParticipantId",
+                        column: x => x.ParticipantId,
+                        principalTable: "Participants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Speakers",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -433,9 +441,9 @@ namespace GestorEventos.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Speaker", x => x.Id);
+                    table.PrimaryKey("PK_Speakers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Speaker_Activities_ActivityId",
+                        name: "FK_Speakers_Activities_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
@@ -492,38 +500,43 @@ namespace GestorEventos.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_EventTopicId",
-                table: "Event",
+                name: "IX_Certificates_ParticipantId",
+                table: "Certificates",
+                column: "ParticipantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_AppUserId",
+                table: "Events",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_EventTopicId",
+                table: "Events",
                 column: "EventTopicId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_LocationId",
-                table: "Event",
+                name: "IX_Events_LocationId",
+                table: "Events",
                 column: "LocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Event_OrganizerId1",
-                table: "Event",
-                column: "OrganizerId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EventSchedule_EventId",
-                table: "EventSchedule",
+                name: "IX_EventSchedules_EventId",
+                table: "EventSchedules",
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_AttendantId",
-                table: "Participant",
+                name: "IX_Participants_AttendantId",
+                table: "Participants",
                 column: "AttendantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participant_EventId",
-                table: "Participant",
+                name: "IX_Participants_EventId",
+                table: "Participants",
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Speaker_ActivityId",
-                table: "Speaker",
+                name: "IX_Speakers_ActivityId",
+                table: "Speakers",
                 column: "ActivityId");
         }
 
@@ -548,37 +561,37 @@ namespace GestorEventos.DAL.Migrations
                 name: "Certificates");
 
             migrationBuilder.DropTable(
-                name: "Participant");
-
-            migrationBuilder.DropTable(
-                name: "Speaker");
+                name: "Speakers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Attendants");
+                name: "Participants");
 
             migrationBuilder.DropTable(
                 name: "Activities");
 
             migrationBuilder.DropTable(
+                name: "Attendants");
+
+            migrationBuilder.DropTable(
                 name: "ActivityTypes");
 
             migrationBuilder.DropTable(
-                name: "EventSchedule");
+                name: "EventSchedules");
 
             migrationBuilder.DropTable(
-                name: "Event");
-
-            migrationBuilder.DropTable(
-                name: "EventTopic");
-
-            migrationBuilder.DropTable(
-                name: "Location");
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "EventTopics");
+
+            migrationBuilder.DropTable(
+                name: "Locations");
         }
     }
 }

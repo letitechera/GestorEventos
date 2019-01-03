@@ -11,10 +11,12 @@ namespace GestorEventos.DAL
 {
     public class AppDbContext : IdentityDbContext<AppUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        private IHttpContextAccessor _httpContextAccessor;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor)
             : base(options)
         {
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public DbSet<Activity> Activities { get; set; }
@@ -25,7 +27,6 @@ namespace GestorEventos.DAL
         public DbSet<EventSchedule> EventSchedules { get; set; }
         public DbSet<EventTopic> EventTopics { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Participant> Participants { get; set; }
         public DbSet<Speaker> Speakers { get; set; }
 
@@ -41,18 +42,41 @@ namespace GestorEventos.DAL
 
             foreach (var entity in entities)
             {
+                var userNameClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.First();
+
+                var userIdClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.FirstOrDefault(c => c.Type == "id")?.Value;
+
+                var currentUsername = !string.IsNullOrEmpty(userNameClaim?.Value)
+                    ? userNameClaim.Value
+                    : "Anonymous";
+
                 if (entity.State == EntityState.Added)
                 {
-                    ((BaseEntity)entity.Entity).CreatedDate = DateTime.UtcNow;
-                    //((BaseEntity)entity.Entity).UserCreated = userName;
-                    //((BaseEntity)entity.Entity).UserCreatedId = userId;
+                    ((BaseEntity)entity.Entity).CreatedDate = DateTime.Now;
+                    ((BaseEntity)entity.Entity).CreatedByName = currentUsername;
+                    ((BaseEntity)entity.Entity).CreatedById = userIdClaim;
                 }
 
-                ((BaseEntity)entity.Entity).ModifiedDate = DateTime.UtcNow;
-                //((BaseEntity)entity.Entity).ModifiedByName = currentUsername;
-                //((BaseEntity)entity.Entity).ModifiedById = userId;
+                ((BaseEntity)entity.Entity).ModifiedDate = DateTime.Now;
+                ((BaseEntity)entity.Entity).ModifiedByName = currentUsername;
+                ((BaseEntity)entity.Entity).ModifiedById = userIdClaim;
             }
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AppUser>()
+            .Property(f => f.DateOfBirth)
+            .HasColumnType("datetime");
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+        }
+
 
     }
 }

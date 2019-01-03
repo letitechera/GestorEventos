@@ -5,6 +5,7 @@ using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 
 namespace GestorEventos.BLL
 {
@@ -98,6 +99,19 @@ namespace GestorEventos.BLL
             try
             {
                 return _eventsRepository.List();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public IEnumerable<EventUI> GetEvents(string userId)
+        {
+            try
+            {
+                var ret = _eventsRepository.List(e => e.CreatedById == userId).ToList().Select(e => new EventUI(e, e.Location.Name, e.EventTopic.Name));
+                return ret;
             }
             catch (Exception e)
             {

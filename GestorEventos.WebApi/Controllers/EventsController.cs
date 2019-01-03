@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,13 @@ namespace GestorEventos.WebApi.Controllers
         public IEnumerable<Event> GetAllEvents()
         {
             return _eventsLogic.GetEvents();
+        }
+
+        [Route("all/{userId}")]
+        [HttpGet]
+        public IEnumerable<EventUI> GetAllEventsByUser(string userId)
+        {
+            return _eventsLogic.GetEvents(userId);
         }
 
         [HttpGet("{id}")]

@@ -90,13 +90,15 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Address");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
+                    b.Property<string>("Description");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -106,6 +108,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<bool>("Enabled");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<string>("Image");
 
                     b.Property<string>("LastName");
 
@@ -120,6 +124,10 @@ namespace GestorEventos.DAL.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
+
+                    b.Property<string>("Phone1");
+
+                    b.Property<string>("Phone2");
 
                     b.Property<string>("PhoneNumber");
 
@@ -143,8 +151,6 @@ namespace GestorEventos.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("AppUser");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.Attendant", b =>
@@ -182,6 +188,10 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("BadgeImage");
+
+                    b.Property<string>("Content");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
@@ -199,6 +209,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<bool>("Sent");
 
                     b.Property<string>("TemplateId");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
@@ -239,10 +251,6 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("OrganizerId");
-
-                    b.Property<string>("OrganizerId1");
-
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
@@ -250,8 +258,6 @@ namespace GestorEventos.DAL.Migrations
                     b.HasIndex("EventTopicId");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("OrganizerId1");
 
                     b.ToTable("Events");
                 });
@@ -268,7 +274,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime?>("Date");
 
                     b.Property<int>("EventId");
 
@@ -539,27 +545,6 @@ namespace GestorEventos.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GestorEventos.Models.Entities.Organizer", b =>
-                {
-                    b.HasBaseType("GestorEventos.Models.Entities.AppUser");
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Image");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("OrganizationId");
-
-                    b.Property<string>("Phone");
-
-                    b.ToTable("Organizer");
-
-                    b.HasDiscriminator().HasValue("Organizer");
-                });
-
             modelBuilder.Entity("GestorEventos.Models.Entities.Activity", b =>
                 {
                     b.HasOne("GestorEventos.Models.Entities.ActivityType", "ActivityType")
@@ -592,10 +577,6 @@ namespace GestorEventos.DAL.Migrations
                         .WithMany()
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GestorEventos.Models.Entities.Organizer", "Organizer")
-                        .WithMany("Events")
-                        .HasForeignKey("OrganizerId1");
                 });
 
             modelBuilder.Entity("GestorEventos.Models.Entities.EventSchedule", b =>

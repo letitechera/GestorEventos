@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GestorEventos.Models.Entities
 {
-    public class Location:BaseEntity
+    public class Location : BaseEntity
     {
         public string Name { get; set; }
         public string Address1 { get; set; }
@@ -21,7 +21,7 @@ namespace GestorEventos.Models.Entities
         {
             get
             {
-                return Address1 + ", " + (Address2 + ", " ?? "") + City;
+                return Address1 + ", " + (Address2 != null ? Address2 + ", " : "") + City;
             }
         }
     }
