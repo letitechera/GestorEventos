@@ -101,11 +101,11 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("CreateTopic")]
+        [Route("CreateTopic/{name}")]
         [HttpPost]
-        public IActionResult CreateEventTopic([FromBody]string topicName)
+        public IActionResult CreateEventTopic(string name)
         {
-            if (_eventsLogic.CreateEventTopic(topicName))
+            if (_eventsLogic.CreateEventTopic(name))
             {
                 return Ok();
             }
