@@ -39,7 +39,5 @@ namespace GestorEventos.WebApi.Controllers
                 throw e;
             }
         }
-
-
     }
 }

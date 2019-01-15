@@ -16,14 +16,5 @@ namespace GestorEventos.Models.Entities
         public int Capacity { get; set; }
 
         public virtual City City { get; set; }
-
-        [NotMapped]
-        public string PrettyLocationAddress
-        {
-            get
-            {
-                return Address1 + ", " + (Address2 != null ? Address2 + ", " : "") + City;
-            }
-        }
     }
 }
