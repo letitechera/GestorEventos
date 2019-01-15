@@ -63,7 +63,7 @@ namespace GestorEventos.DAL.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Enabled = table.Column<bool>(nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime", nullable: true),
                     Image = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Phone1 = table.Column<string>(nullable: true),
@@ -97,6 +97,26 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedByName = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedByName = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Code = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventTopics",
                 columns: table => new
                 {
@@ -113,32 +133,6 @@ namespace GestorEventos.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EventTopics", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedByName = table.Column<string>(nullable: true),
-                    CreatedById = table.Column<string>(nullable: true),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    ModifiedByName = table.Column<string>(nullable: true),
-                    ModifiedById = table.Column<string>(nullable: true),
-                    ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Address1 = table.Column<string>(nullable: true),
-                    Address2 = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    Latitude = table.Column<float>(nullable: false),
-                    Longitude = table.Column<float>(nullable: false),
-                    Capacity = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -248,6 +242,64 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedByName = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedByName = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Abbreviation = table.Column<string>(nullable: true),
+                    CountryId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cities_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedByName = table.Column<string>(nullable: true),
+                    CreatedById = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedByName = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    ModifiedDate = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Address1 = table.Column<string>(nullable: true),
+                    Address2 = table.Column<string>(nullable: true),
+                    CityId = table.Column<int>(nullable: false),
+                    Latitude = table.Column<float>(nullable: false),
+                    Longitude = table.Column<float>(nullable: false),
+                    Capacity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Locations_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -260,24 +312,17 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
                     Image = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     LocationId = table.Column<int>(nullable: false),
-                    AppUserId = table.Column<string>(nullable: true),
                     EventTopicId = table.Column<int>(nullable: false),
                     Canceled = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Events_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Events_EventTopics_EventTopicId",
                         column: x => x.EventTopicId,
@@ -304,7 +349,7 @@ namespace GestorEventos.DAL.Migrations
                     ModifiedByName = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
                     ModifiedDate = table.Column<DateTime>(nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Date = table.Column<DateTime>(nullable: true),
                     EventId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -418,7 +463,7 @@ namespace GestorEventos.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Speakers",
+                name: "Speaker",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -441,9 +486,9 @@ namespace GestorEventos.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Speakers", x => x.Id);
+                    table.PrimaryKey("PK_Speaker", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Speakers_Activities_ActivityId",
+                        name: "FK_Speaker_Activities_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
@@ -505,9 +550,9 @@ namespace GestorEventos.DAL.Migrations
                 column: "ParticipantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_AppUserId",
-                table: "Events",
-                column: "AppUserId");
+                name: "IX_Cities_CountryId",
+                table: "Cities",
+                column: "CountryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_EventTopicId",
@@ -525,6 +570,11 @@ namespace GestorEventos.DAL.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Locations_CityId",
+                table: "Locations",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Participants_AttendantId",
                 table: "Participants",
                 column: "AttendantId");
@@ -535,8 +585,8 @@ namespace GestorEventos.DAL.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Speakers_ActivityId",
-                table: "Speakers",
+                name: "IX_Speaker_ActivityId",
+                table: "Speaker",
                 column: "ActivityId");
         }
 
@@ -561,10 +611,13 @@ namespace GestorEventos.DAL.Migrations
                 name: "Certificates");
 
             migrationBuilder.DropTable(
-                name: "Speakers");
+                name: "Speaker");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Participants");
@@ -585,13 +638,16 @@ namespace GestorEventos.DAL.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "EventTopics");
 
             migrationBuilder.DropTable(
                 name: "Locations");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }

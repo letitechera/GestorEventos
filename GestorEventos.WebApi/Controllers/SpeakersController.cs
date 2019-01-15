@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GestorEventos.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/speakers")]
     public class SpeakersController : Controller
     {

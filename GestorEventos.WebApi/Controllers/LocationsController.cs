@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorEventos.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/locations")]
-    [ApiController]
     public class LocationsController : ControllerBase
     {
         private readonly ILocationsLogic _locationsLogic;
