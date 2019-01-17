@@ -28,7 +28,8 @@ namespace GestorEventos.DAL
         public DbSet<EventTopic> EventTopics { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Participant> Participants { get; set; }
-        public DbSet<Speaker> Speakers { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
         public override int SaveChanges()
         {
@@ -77,6 +78,7 @@ namespace GestorEventos.DAL
             optionsBuilder.UseLazyLoadingProxies();
         }
 
-
+        //add-migration NameMigration -Project GestorEventos.DAL
+        //update-database
     }
 }

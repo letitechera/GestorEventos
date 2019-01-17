@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.WebApi.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SendGrid;
 
@@ -8,6 +9,7 @@ using SendGrid;
 
 namespace GestorEventos.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/mail")]
     public class MailingController : Controller
     {

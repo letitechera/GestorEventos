@@ -62,6 +62,8 @@ namespace GestorEventos.WebApi
             services.TryAddTransient<IRepository<ActivityType>, Repository<ActivityType>>();
             services.TryAddTransient<IRepository<Speaker>, Repository<Speaker>>();
             services.TryAddTransient<IRepository<Certificate>, Repository<Certificate>>();
+            services.TryAddTransient<IRepository<Country>, Repository<Country>>();
+            services.TryAddTransient<IRepository<City>, Repository<City>>();
             //Logic Services
             services.TryAddTransient<IAccreditationLogic, AccreditationLogic>();
             services.TryAddTransient<IActivitiesLogic, ActivitiesLogic>();
@@ -73,6 +75,7 @@ namespace GestorEventos.WebApi
             services.TryAddTransient<ISendGridLogic, SendGridLogic>();
             services.TryAddTransient<ISpeakersLogic, SpeakersLogic>();
             services.TryAddTransient<IUsersLogic, UsersLogic>();
+            services.TryAddTransient<IGeographicsLogic, GeographicsLogic>();
 
             // jwt wire up
             // Get options from app settings
@@ -153,7 +156,7 @@ namespace GestorEventos.WebApi
 
             app.UseCors(builder =>
                 builder.WithOrigins("http://localhost:4200")
-                       .AllowAnyHeader()
+                       .AllowAnyHeader().AllowAnyMethod()
             );
 
             app.UseExceptionHandler(
