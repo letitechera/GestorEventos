@@ -12,7 +12,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool DeleteSpeaker(int speakerId);
 
-        IEnumerable<Speaker> GetSpeakers();
+        IEnumerable<Speaker> GetSpeakers(int activityId);
 
         Speaker GetSpeaker(int speakerId);
 

@@ -21,11 +21,11 @@ namespace GestorEventos.WebApi.Controllers
             _speakersLogic = speakersLogic;
         }
 
-        [Route("all")]
+        [Route("{activityId}/speakers")]
         [HttpGet]
-        public IEnumerable<Speaker> GetAllSpeakers()
+        public IEnumerable<Speaker> GetAllSpeakers(int activityId)
         {
-            return _speakersLogic.GetSpeakers();
+            return _speakersLogic.GetSpeakers(activityId);
         }
 
         [HttpGet("{id}")]

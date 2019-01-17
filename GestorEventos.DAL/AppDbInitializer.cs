@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using GestorEventos.Core;
 using GestorEventos.Models;
 using GestorEventos.Models.Entities;
@@ -73,6 +74,7 @@ namespace GestorEventos.DAL
 
         private static void InsertGeographics(AppDbContext context)
         {
+            //Remove Json Ignore from cities list in Country for this init to work, add it again for Api calls to work.
             List<Country> items = new List<Country>();
             using (StreamReader r = new StreamReader("DataFiles/countries.json"))
             {
