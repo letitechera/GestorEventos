@@ -16,6 +16,8 @@ namespace GestorEventos.BLL.Interfaces
 
         IEnumerable<EventUI> GetEvents(string userId);
 
+        EventUI GetEventUI(int eventId);
+
         Event GetEvent(int eventId);
 
         bool CancelEvent(int eventId);

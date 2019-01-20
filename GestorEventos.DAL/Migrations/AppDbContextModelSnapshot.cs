@@ -456,15 +456,13 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Company");
 
-                    b.Property<string>("ContactUrl");
+                    b.Property<string>("Contact");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
 
                     b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Email");
 
                     b.Property<string>("FisrtName");
 

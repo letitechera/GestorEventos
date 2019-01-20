@@ -119,6 +119,19 @@ namespace GestorEventos.BLL
             }
         }
 
+        public EventUI GetEventUI(int eventId)
+        {
+            try
+            {
+                var eventData = _eventsRepository.FindById(eventId);
+                return new EventUI(eventData, eventData.Location.Name, eventData.EventTopic.Name);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public Event GetEvent(int eventId)
         {
             try

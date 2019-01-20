@@ -11,8 +11,7 @@ namespace GestorEventos.Models.Entities
         public string Position { get; set; }
         public string Nationality { get; set; }
         public string Company { get; set; }
-        public string Email { get; set; }
-        public string ContactUrl { get; set; }
+        public string Contact { get; set; }
         public string Image { get; set; }
         public int ActivityId { get; set; }
 
