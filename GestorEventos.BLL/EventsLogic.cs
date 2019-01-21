@@ -60,12 +60,12 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool SaveImage(int eventId, FileInfo image)
+        public bool SaveImage(int eventId, object file)
         {
             try
             {
                 var speakersBlob = "";
-                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+                var imageUrl = _imagesLogic.LoadImage(file, speakersBlob);
 
                 var _event = _eventsRepository.FindById(eventId);
                 _event.Image = imageUrl;

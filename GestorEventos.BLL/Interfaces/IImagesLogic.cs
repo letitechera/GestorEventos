@@ -7,6 +7,6 @@ namespace GestorEventos.BLL.Interfaces
 {
     public interface IImagesLogic
     {
-        string LoadImage(FileInfo image, string blobName);
+        string LoadImage(object image, string blobName);
     }
 }

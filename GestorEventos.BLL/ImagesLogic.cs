@@ -6,7 +6,7 @@ namespace GestorEventos.BLL
 {
     public class ImagesLogic: IImagesLogic
     {
-        public string LoadImage(FileInfo image, string blobName)
+        public string LoadImage(object image, string blobName)
         {
             throw new NotImplementedException();
         }
