@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
 namespace GestorEventos.Models.Entities
 {
-    public class Event: BaseEntity
+    public class Event : BaseEntity
     {
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
@@ -15,29 +16,14 @@ namespace GestorEventos.Models.Entities
         public int LocationId { get; set; }
         public int EventTopicId { get; set; }
         public bool? Canceled { get; set; }
-        public virtual IList<EventSchedule> Schedules { get; set; }
-        public virtual IList<Participant> Participants { get; set; }
 
         public virtual Location Location { get; set; }
         public virtual EventTopic EventTopic { get; set; }
 
-        [NotMapped]
-        public string PrettyShortStartDate
-        {
-            get
-            {
-                return StartDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
-            }
-        }
-
-        [NotMapped]
-        public string PrettyShortEndDate
-        {
-            get
-            {
-                return EndDate.ToString("dd/MM/yyyy", CultureInfo.CurrentUICulture);
-            }
-        }
+        [JsonIgnore]
+        public virtual IList<EventSchedule> Schedules { get; set; }
+        [JsonIgnore]
+        public virtual IList<Participant> Participants { get; set; }
 
         [NotMapped]
         public string PrettyStartDate

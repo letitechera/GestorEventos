@@ -1,6 +1,4 @@
-﻿using GestorEventos.Core;
-using GestorEventos.DAL;
-using GestorEventos.Models;
+﻿using GestorEventos.DAL;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -24,9 +22,10 @@ namespace GestorEventos.WebApi
                 {
                     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                     var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                    var context = serviceProvider.GetRequiredService<AppDbContext>();
 
                     AppDbInitializer.Initialize(roleManager, userManager);
-                    
+                    AppDbInitializer.Seed(context);
                 }
                 catch (Exception ex)
                 {

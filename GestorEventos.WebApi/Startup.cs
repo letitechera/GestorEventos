@@ -47,7 +47,7 @@ namespace GestorEventos.WebApi
 
             services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
-            
+
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.TryAddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -62,14 +62,18 @@ namespace GestorEventos.WebApi
             services.TryAddTransient<IRepository<ActivityType>, Repository<ActivityType>>();
             services.TryAddTransient<IRepository<Speaker>, Repository<Speaker>>();
             services.TryAddTransient<IRepository<Certificate>, Repository<Certificate>>();
+            services.TryAddTransient<IRepository<Country>, Repository<Country>>();
+            services.TryAddTransient<IRepository<City>, Repository<City>>();
             //Logic Services
             services.TryAddTransient<IAccreditationLogic, AccreditationLogic>();
             services.TryAddTransient<IActivitiesLogic, ActivitiesLogic>();
             services.TryAddTransient<IAttendantsLogic, AttendantsLogic>();
             services.TryAddTransient<IAuthLogic, AuthLogic>();
             services.TryAddTransient<IEventsLogic, EventsLogic>();
+            services.TryAddTransient<IGeographicsLogic, GeographicsLogic>();
             services.TryAddTransient<IImagesLogic, ImagesLogic>();
             services.TryAddTransient<ILocationsLogic, LocationsLogic>();
+            services.TryAddTransient<ISchedulesLogic, SchedulesLogic>();
             services.TryAddTransient<ISendGridLogic, SendGridLogic>();
             services.TryAddTransient<ISpeakersLogic, SpeakersLogic>();
             services.TryAddTransient<IUsersLogic, UsersLogic>();
@@ -150,6 +154,11 @@ namespace GestorEventos.WebApi
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:4200")
+                       .AllowAnyHeader().AllowAnyMethod()
+            );
 
             app.UseExceptionHandler(
              builder =>

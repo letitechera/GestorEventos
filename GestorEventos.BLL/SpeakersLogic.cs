@@ -54,11 +54,11 @@ namespace GestorEventos.BLL
             }
         }
 
-        public IEnumerable<Speaker> GetSpeakers()
+        public IEnumerable<Speaker> GetSpeakers(int activityId)
         {
             try
             {
-                return _speakersRepository.List();
+                return _speakersRepository.List(s => s.ActivityId == activityId);
             }
             catch (Exception e)
             {

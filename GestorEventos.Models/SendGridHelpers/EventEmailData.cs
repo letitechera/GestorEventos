@@ -48,7 +48,7 @@ namespace GestorEventos.Models.SendGridHelpers
             EventImage = _event.Image;
             EventTopic = _event.EventTopic.Name;
             LocationName = _event.Location.Name;
-            LocationAddress = _event.Location.PrettyLocationAddress;
+            LocationAddress = _event.Location.Address1;
             StartDate = _event.PrettyStartDate;
             StartTime = _event.PrettyStartTime;
             EndDate = _event.PrettyEndDate;

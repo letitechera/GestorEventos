@@ -1,0 +1,33 @@
+[
+	{
+		"Name": "Uruguay",
+		"Code": "UY",
+		"Cities": [
+			{
+				"Name": "Montevideo",
+				"Abbreviation": "MVD",
+				"CountryId":0
+			},
+			{
+				"Name": "Canelones",
+				"Abbreviation": "",
+				"CountryId":0
+			},
+			{
+				"Name": "Punta del Este",
+				"Abbreviation": "PDE",
+				"CountryId":0
+			},
+			{
+				"Name": "Paysandú",
+				"Abbreviation": "PDU",
+				"CountryId":0
+			},
+			{
+				"Name": "Salto",
+				"Abbreviation": "",
+				"CountryId":0
+			}
+		]
+	}
+]

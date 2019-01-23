@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using GestorEventos.Core;
 using GestorEventos.Models;
 using GestorEventos.Models.Entities;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using GestorEventos.DAL.Repositories.Interfaces;
+using System.Linq;
 
 namespace GestorEventos.DAL
 {
@@ -57,6 +63,56 @@ namespace GestorEventos.DAL
             if (result.Succeeded)
             {
                 userManager.AddToRoleAsync(admin, Constants.RoleNameAdmin).Wait();
+            }
+        }
+
+        public static void Seed(AppDbContext context)
+        {
+            InsertGeographics(context);
+            context.Dispose();
+        }
+
+        private static void InsertGeographics(AppDbContext context)
+        {
+            //Remove Json Ignore from cities list in Country for this init to work, add it again for Api calls to work.
+            List<Country> items = new List<Country>();
+            using (StreamReader r = new StreamReader("DataFiles/countries.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonConvert.DeserializeObject<List<Country>>(json);
+            }
+            if (items.Count > 0)
+            {
+                foreach (Country cn in items)
+                {
+                    var existant = context.Countries.Where(e => e.Name == cn.Name).FirstOrDefault();
+                    var id = 0;
+                    if (existant == null)
+                    {
+                        var e = context.Countries.Add(cn);
+                        context.SaveChanges();
+                        id = e.Entity.Id;
+                    }
+                    else
+                    {
+                        id = existant.Id;
+                    }
+
+                    if (cn.Cities != null && cn.Cities.Count > 0)
+                    {
+                        foreach (City ci in cn.Cities)
+                        {
+                            var existantCity = context.Cities.Where(e => e.Name == ci.Name).FirstOrDefault();
+
+                            if (existantCity == null)
+                            {
+                                ci.CountryId = id;
+                                context.Cities.Add(ci);
+                                context.SaveChanges();
+                            }
+                        }
+                    }
+                }
             }
         }
     }

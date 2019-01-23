@@ -15,7 +15,7 @@ namespace GestorEventos.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -219,6 +219,64 @@ namespace GestorEventos.DAL.Migrations
                     b.ToTable("Certificates");
                 });
 
+            modelBuilder.Entity("GestorEventos.Models.Entities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Abbreviation");
+
+                    b.Property<int>("CountryId");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<string>("CreatedByName");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<string>("ModifiedByName");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("GestorEventos.Models.Entities.Country", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code");
+
+                    b.Property<string>("CreatedById");
+
+                    b.Property<string>("CreatedByName");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("ModifiedById");
+
+                    b.Property<string>("ModifiedByName");
+
+                    b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("GestorEventos.Models.Entities.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -328,9 +386,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<int>("Capacity");
 
-                    b.Property<string>("City");
-
-                    b.Property<string>("Country");
+                    b.Property<int>("CityId");
 
                     b.Property<string>("CreatedById");
 
@@ -351,6 +407,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.ToTable("Locations");
                 });
@@ -398,15 +456,13 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Company");
 
-                    b.Property<string>("ContactUrl");
+                    b.Property<string>("Contact");
 
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
 
                     b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Email");
 
                     b.Property<string>("FisrtName");
 
@@ -428,7 +484,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("Speakers");
+                    b.ToTable("Speaker");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -566,6 +622,14 @@ namespace GestorEventos.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("GestorEventos.Models.Entities.City", b =>
+                {
+                    b.HasOne("GestorEventos.Models.Entities.Country", "Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("GestorEventos.Models.Entities.Event", b =>
                 {
                     b.HasOne("GestorEventos.Models.Entities.EventTopic", "EventTopic")
@@ -584,6 +648,14 @@ namespace GestorEventos.DAL.Migrations
                     b.HasOne("GestorEventos.Models.Entities.Event", "Event")
                         .WithMany("Schedules")
                         .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GestorEventos.Models.Entities.Location", b =>
+                {
+                    b.HasOne("GestorEventos.Models.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
