@@ -17,13 +17,12 @@ namespace GestorEventos.BLL
         private readonly IRepository<Participant> _participantRepository;
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
-        private readonly IImagesLogic _imagesLogic;
         private readonly ISendGridLogic _sendgridLogic;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
-            IImagesLogic imagesLogic, ISendGridLogic sendgridLogic)
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            ISendGridLogic sendgridLogic)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -31,7 +30,6 @@ namespace GestorEventos.BLL
             _topicsRepository = topicsRepository;
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
-            _imagesLogic = imagesLogic;
             _sendgridLogic = sendgridLogic;
         }
 
@@ -60,24 +58,24 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool SaveImage(int eventId, object file)
-        {
-            try
-            {
-                var speakersBlob = "";
-                var imageUrl = _imagesLogic.LoadImage(file, speakersBlob);
+        //public bool SaveImage(int eventId, object file)
+        //{
+        //    try
+        //    {
+        //        var speakersBlob = "";
+        //        var imageUrl = _imagesLogic.LoadImage(file, speakersBlob);
 
-                var _event = _eventsRepository.FindById(eventId);
-                _event.Image = imageUrl;
-                _eventsRepository.Update(_event);
+        //        var _event = _eventsRepository.FindById(eventId);
+        //        _event.Image = imageUrl;
+        //        _eventsRepository.Update(_event);
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public bool DeleteEvent(int eventId)
         {

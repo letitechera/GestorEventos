@@ -1,38 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GestorEventos.WebApi.Controllers
 {
-    [Authorize]
-    [Route("api/fileupload")]
+    //[Authorize]
+    [Route("api/upload")]
     public class FileUploadsController : Controller
     {
-        private readonly IEventsLogic _eventsLogic;
+        private readonly IFilesLogic _filesLogic;
 
-        public FileUploadsController(IEventsLogic eventsLogic)
+        public FileUploadsController(IFilesLogic filesLogic)
         {
-            _eventsLogic = eventsLogic;
+            _filesLogic = filesLogic;
         }
 
-        [Route("eventimage/{id}")]
+        [Route("eventimage/{eventId}")]
         [HttpPost]
-        public void PostEventImage(int id, [FromBody]object file)
+        public async Task<IActionResult> PostEventImageAsync(int eventId)
         {
             try
             {
-                //_eventsLogic.SaveImage(id, file);
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+
+                    var newFile = await _filesLogic.LoadEventImage(eventId, fileName, file);
+
+                    return Ok(newFile);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (Exception ex)
             {
-                throw ex;
+                return StatusCode(500, ex.Message);
             }
         }
     }
