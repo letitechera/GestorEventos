@@ -71,7 +71,7 @@ namespace GestorEventos.WebApi
             services.TryAddTransient<IAuthLogic, AuthLogic>();
             services.TryAddTransient<IEventsLogic, EventsLogic>();
             services.TryAddTransient<IGeographicsLogic, GeographicsLogic>();
-            services.TryAddTransient<IImagesLogic, ImagesLogic>();
+            services.TryAddTransient<IFilesLogic, FilesLogic>();
             services.TryAddTransient<ILocationsLogic, LocationsLogic>();
             services.TryAddTransient<ISchedulesLogic, SchedulesLogic>();
             services.TryAddTransient<ISendGridLogic, SendGridLogic>();

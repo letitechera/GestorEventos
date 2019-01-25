@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorEventos.WebApi.Controllers
@@ -14,32 +11,27 @@ namespace GestorEventos.WebApi.Controllers
     [Route("api/upload")]
     public class FileUploadsController : Controller
     {
-        private readonly IEventsLogic _eventsLogic;
+        private readonly IFilesLogic _filesLogic;
 
-        public FileUploadsController(IEventsLogic eventsLogic)
+        public FileUploadsController(IFilesLogic filesLogic)
         {
-            _eventsLogic = eventsLogic;
+            _filesLogic = filesLogic;
         }
 
-        [Route("eventimage")]
+        [Route("eventimage/{eventId}")]
         [HttpPost]
-        public IActionResult PostEventImage()
+        public async Task<IActionResult> PostEventImageAsync(int eventId)
         {
             try
             {
                 var file = Request.Form.Files[0];
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), "Images");
                 if (file.Length > 0)
                 {
                     var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine("Images", fileName);
 
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-                    return Ok(new { dbPath });
+                    var newFile = await _filesLogic.LoadEventImage(eventId, fileName, file);
+
+                    return Ok(newFile);
                 }
                 else
                 {

@@ -43,7 +43,7 @@ namespace GestorEventos.DAL
 
             foreach (var entity in entities)
             {
-                var userNameClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.First();
+                var userNameClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.FirstOrDefault();
 
                 var userIdClaim = (_httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity)?.Claims?.FirstOrDefault(c => c.Type == "id")?.Value;
 

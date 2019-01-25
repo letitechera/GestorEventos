@@ -25,7 +25,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool RegisterToEvent(int eventId, Attendant attendant);
 
-        bool SaveImage(int eventId, object image);
+        //bool SaveImage(int eventId, object image);
 
         bool CreateEventTopic(string topicName);
 
