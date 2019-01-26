@@ -6,6 +6,7 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
+using Microsoft.Extensions.Configuration;
 
 namespace GestorEventos.BLL
 {
@@ -18,11 +19,12 @@ namespace GestorEventos.BLL
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
         private readonly ISendGridLogic _sendgridLogic;
+        private readonly IConfiguration Configuration;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
             IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
-            ISendGridLogic sendgridLogic)
+            ISendGridLogic sendgridLogic, IConfiguration configuration)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -31,6 +33,7 @@ namespace GestorEventos.BLL
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
             _sendgridLogic = sendgridLogic;
+            Configuration = configuration;
         }
 
         #region Events
@@ -45,8 +48,8 @@ namespace GestorEventos.BLL
                 }
                 else
                 {
-                    //TODO: change default image url
-                    if (_event.Image == null) _event.Image = "{urlToDefault}";
+                    if (string.IsNullOrEmpty(_event.Image))
+                        _event.Image = Configuration.GetValue<string>("StorageConfig:DefaultEventImage");
                     _eventsRepository.Add(_event);
                 }
                 return true;
