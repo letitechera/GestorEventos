@@ -1,7 +1,5 @@
-﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Drawing;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
 
@@ -23,7 +21,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool CancelEvent(int eventId);
 
-        bool RegisterToEvent(int eventId, Attendant attendant);
+        Bitmap RegisterToEvent(int eventId, Attendant attendant);
 
         //bool SaveImage(int eventId, object image);
 
@@ -32,5 +30,7 @@ namespace GestorEventos.BLL.Interfaces
         bool DeleteEventTopic(int topicId);
 
         IEnumerable<EventTopic> GetAllTopics();
+
+        bool Accredit(string qrCode);
     }
 }

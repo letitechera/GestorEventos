@@ -87,7 +87,7 @@ namespace GestorEventos.WebApi.Controllers
                 return BadRequest("Invalid User Request");
             }
 
-            var result = await _authLogic.ForgotPassword(request, string.Empty);
+            var result = await _authLogic.ForgotPassword(request);
 
             if (result.Success)
             {

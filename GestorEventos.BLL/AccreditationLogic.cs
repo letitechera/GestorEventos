@@ -1,16 +1,17 @@
 ﻿using GestorEventos.BLL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using QRCoder;
+using System.Drawing;
 
 namespace GestorEventos.BLL
 {
     public class AccreditationLogic : IAccreditationLogic
     {
-        public string GenerateQRCode()
+        public Bitmap GenerateQRCode(int registrationID)
         {
-            //TODO:
-            throw new NotImplementedException();
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(registrationID.ToString(), QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            return qrCode.GetGraphic(20);
         }
     }
 }

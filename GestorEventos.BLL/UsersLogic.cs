@@ -76,7 +76,7 @@ namespace GestorEventos.BLL
         public async Task<UserDTO> GetUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            return null;
+            return new UserDTO(user);
         }
 
         public async Task<IEnumerable<UserDTO>> GetUsersToEnable()
