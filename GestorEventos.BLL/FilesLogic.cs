@@ -20,7 +20,7 @@ namespace GestorEventos.BLL
             _eventsLogic = eventsLogic;
         }
 
-        public async Task<string> LoadEventImage(int eventId, string fileName, IFormFile file)
+        public async Task<string> LoadEventImage(int eventId, IFormFile file)
         {
             var conectionString = Configuration.GetValue<string>("StorageConfig:StringConnection");
             var basePath = Configuration.GetValue<string>("StorageConfig:BaseStoragePath");
@@ -37,13 +37,18 @@ namespace GestorEventos.BLL
                 };
                 await container.SetPermissionsAsync(permissions);
 
-                var newName = $"event_{eventId}_image.jpg";
+                var guid = Guid.NewGuid();
+
+                var newName = $"event_{eventId}_{guid}.jpg";
                 var newBlob = container.GetBlockBlobReference(newName);
                 await newBlob.UploadFromStreamAsync(file.OpenReadStream());
 
-                Event _event = _eventsLogic.GetEvent(eventId);
-                _event.Image = $"{basePath}/eventimages/" + newName;
-                _eventsLogic.SaveEvent(_event, true);
+                if (eventId != 0)
+                {
+                    Event _event = _eventsLogic.GetEvent(eventId);
+                    _event.Image = $"{basePath}/eventimages/" + newName;
+                    _eventsLogic.SaveEvent(_event, true);
+                }
 
                 return $"{basePath}/eventimages/" + newName;
             }
