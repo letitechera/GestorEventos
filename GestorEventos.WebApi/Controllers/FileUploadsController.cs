@@ -29,9 +29,9 @@ namespace GestorEventos.WebApi.Controllers
                 {
                     var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
 
-                    var newFile = await _filesLogic.LoadEventImage(eventId, fileName, file);
+                    var newFile = await _filesLogic.LoadEventImage(eventId, file);
 
-                    return Ok(newFile);
+                    return Ok(new { newFile });
                 }
                 else
                 {
