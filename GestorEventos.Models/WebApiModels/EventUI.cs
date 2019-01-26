@@ -13,7 +13,7 @@ namespace GestorEventos.Models.WebApiModels
         public string Image { get; set; }
         public string Location { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime FinishDate { get; set; }
+        public DateTime EndDate { get; set; }
         public string Topic { get; set; }
         public string CreatedById { get; set; }
 
@@ -25,7 +25,7 @@ namespace GestorEventos.Models.WebApiModels
             Image = _event.Image;
             Location = location ?? "N/A";
             StartDate = _event.StartDate;
-            FinishDate = _event.EndDate;
+            EndDate = _event.EndDate;
             Topic = topic ?? "N/A";
             CreatedById = _event.CreatedById;
         }

@@ -11,9 +11,9 @@ namespace GestorEventos.BLL
     public class SpeakersLogic : ISpeakersLogic
     {
         private readonly IRepository<Speaker> _speakersRepository;
-        private readonly IImagesLogic _imagesLogic;
+        private readonly IFilesLogic _imagesLogic;
 
-        public SpeakersLogic(IRepository<Speaker> speakersRepository, IImagesLogic imagesLogic)
+        public SpeakersLogic(IRepository<Speaker> speakersRepository, IFilesLogic imagesLogic)
         {
             _speakersRepository = speakersRepository;
             _imagesLogic = imagesLogic;
@@ -54,11 +54,11 @@ namespace GestorEventos.BLL
             }
         }
 
-        public IEnumerable<Speaker> GetSpeakers()
+        public IEnumerable<Speaker> GetSpeakers(int activityId)
         {
             try
             {
-                return _speakersRepository.List();
+                return _speakersRepository.List(s => s.ActivityId == activityId);
             }
             catch (Exception e)
             {
@@ -82,12 +82,12 @@ namespace GestorEventos.BLL
         {
             try
             {
-                var speakersBlob = "";
-                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+                //var speakersBlob = "";
+                //var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
 
-                var speaker = _speakersRepository.FindById(speakerId);
-                speaker.Image = imageUrl;
-                _speakersRepository.Update(speaker);
+                //var speaker = _speakersRepository.FindById(speakerId);
+                //speaker.Image = imageUrl;
+                //_speakersRepository.Update(speaker);
 
                 return true;
             }

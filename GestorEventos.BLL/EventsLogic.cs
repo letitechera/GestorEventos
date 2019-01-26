@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.IO;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
 using System.Drawing;
+using Microsoft.Extensions.Configuration;
 
 namespace GestorEventos.BLL
 {
@@ -18,13 +18,13 @@ namespace GestorEventos.BLL
         private readonly IRepository<Participant> _participantRepository;
         private readonly IRepository<Attendant> _attendantsRepository;
         private readonly IAccreditationLogic _accreditationLogic;
-        private readonly IImagesLogic _imagesLogic;
         private readonly ISendGridLogic _sendgridLogic;
+        private readonly IConfiguration Configuration;
 
         public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
-            IImagesLogic imagesLogic, ISendGridLogic sendgridLogic)
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            ISendGridLogic sendgridLogic, IConfiguration configuration)
         {
             _eventsRepository = eventsRepository;
             _schedulesRepository = schedulesRepository;
@@ -32,8 +32,8 @@ namespace GestorEventos.BLL
             _topicsRepository = topicsRepository;
             _attendantsRepository = attendantsRepository;
             _accreditationLogic = accreditationLogic;
-            _imagesLogic = imagesLogic;
             _sendgridLogic = sendgridLogic;
+            Configuration = configuration;
         }
 
         #region Events
@@ -48,8 +48,8 @@ namespace GestorEventos.BLL
                 }
                 else
                 {
-                    //TODO: change default image url
-                    if (_event.Image == null) _event.Image = "{urlToDefault}";
+                    if (string.IsNullOrEmpty(_event.Image))
+                        _event.Image = Configuration.GetValue<string>("StorageConfig:DefaultEventImage");
                     _eventsRepository.Add(_event);
                 }
                 return true;
@@ -61,24 +61,24 @@ namespace GestorEventos.BLL
         }
 
         //TODO: Load Event Image To Cloud
-        public bool SaveImage(int eventId, FileInfo image)
-        {
-            try
-            {
-                var speakersBlob = "";
-                var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
+        //public bool SaveImage(int eventId, object file)
+        //{
+        //    try
+        //    {
+        //        var speakersBlob = "";
+        //        var imageUrl = _imagesLogic.LoadImage(file, speakersBlob);
 
-                var _event = _eventsRepository.FindById(eventId);
-                _event.Image = imageUrl;
-                _eventsRepository.Update(_event);
+        //        var _event = _eventsRepository.FindById(eventId);
+        //        _event.Image = imageUrl;
+        //        _eventsRepository.Update(_event);
 
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public bool DeleteEvent(int eventId)
         {
@@ -113,6 +113,19 @@ namespace GestorEventos.BLL
             {
                 var ret = _eventsRepository.List(e => e.CreatedById == userId).ToList().Select(e => new EventUI(e, e.Location.Name, e.EventTopic.Name));
                 return ret;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public EventUI GetEventUI(int eventId)
+        {
+            try
+            {
+                var eventData = _eventsRepository.FindById(eventId);
+                return new EventUI(eventData, eventData.Location.Name, eventData.EventTopic.Name);
             }
             catch (Exception e)
             {

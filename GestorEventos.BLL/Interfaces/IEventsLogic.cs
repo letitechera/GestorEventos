@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
@@ -15,11 +15,15 @@ namespace GestorEventos.BLL.Interfaces
 
         IEnumerable<EventUI> GetEvents(string userId);
 
+        EventUI GetEventUI(int eventId);
+
         Event GetEvent(int eventId);
 
         bool CancelEvent(int eventId);
 
         Bitmap RegisterToEvent(int eventId, Attendant attendant);
+
+        //bool SaveImage(int eventId, object image);
 
         bool CreateEventTopic(string topicName);
 

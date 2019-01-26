@@ -36,7 +36,20 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Event GetEvent(int id)
+        public EventUI GetEvent(int id)
+        {
+            try
+            {
+                return _eventsLogic.GetEventUI(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpGet("{id}/whole")]
+        public Event GetWholeEvent(int id)
         {
             try
             {
@@ -70,7 +83,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteEvent/{id}")]
+        [HttpDelete("DeleteEvent/{eventId}")]
         public IActionResult DeleteEvent(int eventId)
         {
             if (_eventsLogic.DeleteEvent(eventId))
