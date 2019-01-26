@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
@@ -90,13 +91,14 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("RegisterToEvent")]
-        [HttpPut]
-        public IActionResult RegisterToEvent([FromBody]int eventId, [FromBody]Attendant attendant)
+        [Route("RegisterToEvent/{eventId}")]
+        [HttpPost]
+        public IActionResult RegisterToEvent(int eventId, [FromBody]Attendant attendant)
         {
-            if (_eventsLogic.RegisterToEvent(eventId, attendant))
+            var qrCode = _eventsLogic.RegisterToEvent(eventId, attendant);
+            if (qrCode != null)
             {
-                return Ok();
+                return Ok(qrCode);
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
         }

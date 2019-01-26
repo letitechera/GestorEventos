@@ -6,6 +6,7 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
+using System.Drawing;
 
 namespace GestorEventos.BLL
 {
@@ -131,7 +132,7 @@ namespace GestorEventos.BLL
             }
         }
 
-        public bool RegisterToEvent(int eventId, Attendant attendant)
+        public Bitmap RegisterToEvent(int eventId, Attendant attendant)
         {
             var participant = new Participant
             {
@@ -154,15 +155,27 @@ namespace GestorEventos.BLL
                     participant.AttendantId = existant.Id;
                 }
 
-                // Generate QR Code
-                participant.QRCode = _accreditationLogic.GenerateQRCode();
+                var registered = _participantRepository
+                    .List()
+                    .FirstOrDefault(x => x.AttendantId == participant.AttendantId && x.EventId == participant.EventId);
 
-                _participantRepository.Add(participant);
+                if (registered == null)
+                {
+                    // Save participant and get registration ID
+                    _participantRepository.Add(participant);
 
-                // Send Email with QR to Participant
-                _sendgridLogic.SendQRCodeEmail(participant);
+                    var registrationID = _participantRepository.List(p => p.EventId == eventId && p.AttendantId == participant.AttendantId).FirstOrDefault().Id;
 
-                return true;
+                    // Generate QR Code
+                    var qrCode = _accreditationLogic.GenerateQRCode(registrationID);
+
+                    // Send Email with QR to Participant
+                    _sendgridLogic.SendQRCodeEmail(participant, qrCode);
+
+                    return qrCode;
+                }
+
+                return null;
             }
             catch (Exception e)
             {

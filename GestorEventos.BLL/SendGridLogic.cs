@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Core;
@@ -68,14 +69,14 @@ namespace GestorEventos.BLL
 
         #region Accreditations Mailing
 
-        public async Task<Response> SendQRCodeEmail(Participant participant)
+        public async Task<Response> SendQRCodeEmail(Participant participant, Bitmap qrCode)
         {
             var attendant = _attendantsRepository.FindById(participant.AttendantId);
             var _event = _eventsRepository.FindById(participant.EventId);
 
             var recipient = new EmailAddress(attendant.Email, attendant.FullName);
             var templateId = _options.TemplateParticipantCode;
-            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, participant.QRCode);
+            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, qrCode.ToString());
 
             return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
         }

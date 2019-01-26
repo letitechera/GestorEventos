@@ -36,7 +36,7 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{userId}")]
         public async Task<IActionResult> GetUser(string userId)
         {
             var result = await _usersLogic.GetUser(userId);

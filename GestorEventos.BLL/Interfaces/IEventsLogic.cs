@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
 
@@ -18,7 +19,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool CancelEvent(int eventId);
 
-        bool RegisterToEvent(int eventId, Attendant attendant);
+        Bitmap RegisterToEvent(int eventId, Attendant attendant);
 
         bool CreateEventTopic(string topicName);
 

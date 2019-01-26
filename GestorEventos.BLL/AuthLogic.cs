@@ -76,7 +76,7 @@ namespace GestorEventos.BLL
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword, string actionUrl)
+        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword)
         {
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
 
@@ -89,9 +89,8 @@ namespace GestorEventos.BLL
             try
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-
+                var actionUrl = "http://www.google.com";
                 var url = GenerateTokenUrl(actionUrl, Core.Constants.SendGridAuthLink_ResetPassword, user.Id, resetToken);
-
                 var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, url.ToString());
 
                 return new ResetPasswordResult(true);
