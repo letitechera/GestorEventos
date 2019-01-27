@@ -464,7 +464,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<string>("FisrtName");
+                    b.Property<string>("FirstName");
 
                     b.Property<string>("Image");
 
