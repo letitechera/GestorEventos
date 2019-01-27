@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
 

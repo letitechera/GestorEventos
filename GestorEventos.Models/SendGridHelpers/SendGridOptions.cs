@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GestorEventos.WebApi.Models
+﻿namespace GestorEventos.WebApi.Models
 {
     public class SendGridOptions
     {
@@ -17,5 +12,6 @@ namespace GestorEventos.WebApi.Models
         public string TemplateNewEvent { get; set; }
         public string TemplateRegistrationSuccess { get; set; }
         public string TemplateParticipantCode { get; set; }
+        public string TemplateEventCampaign { get; set; }
     }
 }

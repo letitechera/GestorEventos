@@ -238,6 +238,11 @@ namespace GestorEventos.BLL
 
         }
 
+        public void SendCampaign(int eventId)
+        {
+            _sendgridLogic.SendCampaignEmail(eventId);
+        }
+
         #endregion
 
         #region Event Topics
