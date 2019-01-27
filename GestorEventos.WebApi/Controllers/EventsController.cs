@@ -155,7 +155,7 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [Route("SendCampaign/{eventId}")]
-        [HttpPost]
+        [HttpGet]
         public IActionResult SendCampaign(int eventId)
         {
             try

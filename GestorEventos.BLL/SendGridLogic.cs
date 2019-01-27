@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
@@ -66,14 +67,15 @@ namespace GestorEventos.BLL
 
         #region Accreditations Mailing
 
-        public async Task<Response> SendQRCodeEmail(Participant participant, Bitmap qrCode)
+        public async Task<Response> SendQRCodeEmail(Participant participant, byte[] qrCode)
         {
             var attendant = _attendantsRepository.FindById(participant.AttendantId);
             var _event = _eventsRepository.FindById(participant.EventId);
 
             var recipient = new EmailAddress(attendant.Email, attendant.FullName);
             var templateId = _options.TemplateParticipantCode;
-            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, qrCode.ToString());
+            var base64QR = Convert.ToBase64String(qrCode);
+            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, base64QR);
 
             return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
         }
@@ -82,12 +84,12 @@ namespace GestorEventos.BLL
         {
             var _event = _eventsRepository.FindById(eventId);
             var attendants = _attendantsRepository.List();
+            var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
 
             foreach (var item in attendants)
             {
                 var recipient = new EmailAddress(item.Email, item.FullName);
                 var templateId = _options.TemplateEventCampaign;
-                var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
                 var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl);
 
                 await SendTemplateEmail(recipient, templateId, dynamicTemplateData);

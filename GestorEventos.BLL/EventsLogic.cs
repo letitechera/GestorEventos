@@ -5,7 +5,6 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
-using System.Drawing;
 using Microsoft.Extensions.Configuration;
 
 namespace GestorEventos.BLL
@@ -145,7 +144,7 @@ namespace GestorEventos.BLL
             }
         }
 
-        public Bitmap RegisterToEvent(int eventId, Attendant attendant)
+        public byte[] RegisterToEvent(int eventId, Attendant attendant)
         {
             var participant = new Participant
             {

@@ -1,9 +1,7 @@
-﻿using System.Drawing;
-
-namespace GestorEventos.BLL.Interfaces
+﻿namespace GestorEventos.BLL.Interfaces
 {
     public interface IAccreditationLogic
     {
-        Bitmap GenerateQRCode(int registrationID);
+        byte[] GenerateQRCode(int registrationID);
     }
 }
