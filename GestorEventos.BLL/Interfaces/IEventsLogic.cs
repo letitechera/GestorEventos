@@ -32,6 +32,6 @@ namespace GestorEventos.BLL.Interfaces
 
         IEnumerable<EventTopic> GetAllTopics();
 
-        bool Accredit(string qrCode);
+        Participant Accredit(int participantId);
     }
 }

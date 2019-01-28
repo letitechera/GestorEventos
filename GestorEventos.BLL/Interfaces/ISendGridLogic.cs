@@ -1,6 +1,5 @@
 ﻿using GestorEventos.Models.Entities;
 using SendGrid;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace GestorEventos.BLL.Interfaces

@@ -316,9 +316,10 @@ namespace GestorEventos.BLL
             }
         }
 
-        public bool Accredit(string qrCode)
+        public Participant Accredit(int participantId)
         {
-            throw new NotImplementedException();
+            var participant = _participantRepository.FindById(participantId);
+            return participant;
         }
 
         #endregion
