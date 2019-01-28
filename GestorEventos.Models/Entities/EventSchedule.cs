@@ -11,7 +11,7 @@ namespace GestorEventos.Models.Entities
         public int EventId { get; set; }
 
         public virtual Event Event { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual IList<Activity> Activities { get; set; }
 
     }

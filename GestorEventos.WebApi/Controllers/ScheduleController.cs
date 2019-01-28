@@ -27,7 +27,7 @@ namespace GestorEventos.WebApi.Controllers
 
         #region Schedules
 
-        [Route("{eventId}/all")]
+        [Route("event/{eventId}/all")]
         [HttpGet]
         public IEnumerable<EventSchedule> GetSchedulesByEvent(int eventId)
         {
@@ -127,7 +127,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteActivity/{id}")]
+        [HttpDelete("DeleteActivity/{activityId}")]
         public IActionResult DeleteActivity(int activityId)
         {
             if (_activitiesLogic.DeleteActivity(activityId))

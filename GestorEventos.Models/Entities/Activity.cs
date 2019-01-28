@@ -16,7 +16,7 @@ namespace GestorEventos.Models.Entities
 
         public virtual EventSchedule EventSchedule { get; set; }
         public virtual ActivityType ActivityType { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual IList<Speaker> Speakers { get; set; }
     }
 }

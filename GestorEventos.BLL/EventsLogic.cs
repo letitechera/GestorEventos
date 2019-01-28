@@ -145,6 +145,19 @@ namespace GestorEventos.BLL
             }
         }
 
+        public EventDates GetEventDates(int eventId)
+        {
+            try
+            {
+                var _event = _eventsRepository.FindById(eventId);
+                return new EventDates { StartDate = _event.StartDate, EndDate = _event.EndDate };
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public Bitmap RegisterToEvent(int eventId, Attendant attendant)
         {
             var participant = new Participant
