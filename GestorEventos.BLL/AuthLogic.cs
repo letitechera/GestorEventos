@@ -88,7 +88,7 @@ namespace GestorEventos.BLL
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword)
+        public async Task<ResetPasswordResult> ForgotPasswordRequest(ForgotPasswordRequest forgotPassword)
         {
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
 
@@ -113,11 +113,18 @@ namespace GestorEventos.BLL
             }
         }
 
+        public async Task<IdentityResult> ForgotPassword(ForgotPasswordRequest forgotPassword)
+        {
+            var user = await _userManager.FindByIdAsync(forgotPassword.Id);
+            return await _userManager.ResetPasswordAsync(user, forgotPassword.Code, forgotPassword.Password);
+        }
+
         public async Task<IdentityResult> ResetPassword(ResetPasswordRequest resetPassword)
         {
             var user = await _userManager.FindByIdAsync(resetPassword.Id);
-            return await _userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.Password);
+            return await _userManager.ChangePasswordAsync(user, resetPassword.CurrentPassword, resetPassword.NewPassword);
         }
+
 
         private async Task<bool> SendRegistrationAlertMail(AppUser registered, string adminEmail, string redirectionLink)
         {
