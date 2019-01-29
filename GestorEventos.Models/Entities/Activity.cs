@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace GestorEventos.Models.Entities
 {
@@ -10,8 +8,7 @@ namespace GestorEventos.Models.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public int ActivityTypeId { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public DateTime StartTime { get; set; }
         public int EventScheduleId { get; set; }
 
         public virtual EventSchedule EventSchedule { get; set; }

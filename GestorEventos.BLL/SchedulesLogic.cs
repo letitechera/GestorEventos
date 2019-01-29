@@ -18,7 +18,7 @@ namespace GestorEventos.BLL
             _activitiesRepository = activitiesRepository;
         }
 
-        #region Activities
+        #region Schedules
 
         public bool SaveSchedule(EventSchedule schedule, bool update = false)
         {
