@@ -35,8 +35,6 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<TimeSpan>("EndTime");
-
                     b.Property<int>("EventScheduleId");
 
                     b.Property<string>("ModifiedById");
@@ -47,7 +45,7 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<TimeSpan>("StartTime");
+                    b.Property<DateTime>("StartTime");
 
                     b.HasKey("Id");
 
