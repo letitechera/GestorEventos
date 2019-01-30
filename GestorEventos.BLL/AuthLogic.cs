@@ -88,7 +88,7 @@ namespace GestorEventos.BLL
             await _userManager.DeleteAsync(user);
         }
 
-        public async Task<ResetPasswordResult> ForgotPasswordRequest(ForgotPasswordRequest forgotPassword)
+        public async Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword)
         {
             var user = await _userManager.FindByEmailAsync(forgotPassword.Email);
 
@@ -101,7 +101,7 @@ namespace GestorEventos.BLL
             try
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var actionUrl = _configuration.GetValue<string>("SiteOptions:ForgotPassword");
+                var actionUrl = _configuration.GetValue<string>("SiteOptions:ResetPassword");
                 var url = GenerateTokenUrl(actionUrl, Core.Constants.SendGridAuthLink_ResetPassword, user.Id, resetToken);
                 var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, url.ToString());
 
@@ -113,18 +113,17 @@ namespace GestorEventos.BLL
             }
         }
 
-        public async Task<IdentityResult> ForgotPassword(ForgotPasswordRequest forgotPassword)
-        {
-            var user = await _userManager.FindByIdAsync(forgotPassword.Id);
-            return await _userManager.ResetPasswordAsync(user, forgotPassword.Code, forgotPassword.Password);
-        }
-
         public async Task<IdentityResult> ResetPassword(ResetPasswordRequest resetPassword)
         {
             var user = await _userManager.FindByIdAsync(resetPassword.Id);
-            return await _userManager.ChangePasswordAsync(user, resetPassword.CurrentPassword, resetPassword.NewPassword);
+            return await _userManager.ResetPasswordAsync(user, resetPassword.Code, resetPassword.Password);
         }
 
+        public async Task<IdentityResult> ChangePassword(ChangePasswordRequest changePassword)
+        {
+            var user = await _userManager.FindByIdAsync(changePassword.Id);
+            return await _userManager.ChangePasswordAsync(user, changePassword.CurrentPassword, changePassword.NewPassword);
+        }
 
         private async Task<bool> SendRegistrationAlertMail(AppUser registered, string adminEmail, string redirectionLink)
         {

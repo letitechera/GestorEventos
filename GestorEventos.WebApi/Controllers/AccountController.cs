@@ -79,8 +79,8 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("forgot-password-request")]
-        public async Task<IActionResult> ForgotPasswordRequest(ForgotPasswordRequest request)
+        [Route("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
         {
             if (request == null)
             {
@@ -89,23 +89,7 @@ namespace GestorEventos.WebApi.Controllers
 
             var result = await _authLogic.ForgotPassword(request);
 
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpPost]
-        [Route("forgot-passsword")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
-        {
-            var result = await _authLogic.ForgotPassword(request);
-
-            if (result.Succeeded)
+            if (result.Success)
             {
                 return Ok();
             }
@@ -120,6 +104,22 @@ namespace GestorEventos.WebApi.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
             var result = await _authLogic.ResetPassword(request);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var result = await _authLogic.ChangePassword(request);
 
             if (result.Succeeded)
             {
