@@ -137,6 +137,13 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
+        [Route("activitytypes")]
+        [HttpGet]
+        public IEnumerable<ActivityType> GetActivityTypes()
+        {
+            return _activitiesLogic.GetActivityTypes();
+        }
+
         #endregion
     }
 }
