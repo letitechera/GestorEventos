@@ -44,11 +44,18 @@ namespace GestorEventos.BLL
             return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
         }
 
-        public async Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl)
+        public async Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl, string code)
         {
             var templateId = _options.TemplatePasswordReset;
 
-            return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
+            var recipient = new EmailAddress(recipEmail, recipName);
+            var dynamicTemplateData = new ResetPasswordEmailData
+            {
+                LinkUrl = linkUrl,
+                Code = code
+            };
+
+            return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
         }
 
         public async Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl)

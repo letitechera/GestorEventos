@@ -102,8 +102,7 @@ namespace GestorEventos.BLL
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var actionUrl = _configuration.GetValue<string>("SiteOptions:ResetPassword");
-                var url = GenerateTokenUrl(actionUrl, Core.Constants.SendGridAuthLink_ResetPassword, user.Id, resetToken);
-                var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, url.ToString());
+                var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, actionUrl, resetToken);
 
                 return new ResetPasswordResult(true);
             }
