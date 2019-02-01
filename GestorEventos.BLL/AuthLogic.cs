@@ -102,7 +102,9 @@ namespace GestorEventos.BLL
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var actionUrl = _configuration.GetValue<string>("SiteOptions:ResetPassword");
-                var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, actionUrl, resetToken);
+                //var url = GenerateTokenUrl(actionUrl, user.Id, resetToken);
+                var url = string.Format("{0}/{1}/{2}", actionUrl, user.Id, resetToken);
+                var result = await _sendGridLogic.SendPasswordReset($"{user.FirstName} {user.LastName}", user.Email, url);
 
                 return new ResetPasswordResult(true);
             }
@@ -136,19 +138,19 @@ namespace GestorEventos.BLL
             return true;
         }
 
-        private Uri GenerateTokenUrl(string actionUrl, string oauthLink, params string[] tokens)
-        {
-            Uri callbackUrl = new Uri(actionUrl);
+        //private Uri GenerateTokenUrl(string actionUrl, string userId, string resetToken)
+        //{
+        //    Uri callbackUrl = new Uri(actionUrl);
 
-            var paramList = new List<string>();
-            paramList.AddRange(tokens.Select(HttpUtility.UrlEncode));
+        //    var paramList = new List<string>();
+        //    paramList.AddRange(tokens.Select(HttpUtility.UrlEncode));
 
-            var confirmUrl = string.Format(oauthLink, paramList.ToArray());
+        //    var confirmUrl = string.Format(oauthLink, paramList.ToArray());
 
-            callbackUrl = new Uri(callbackUrl, confirmUrl);
+        //    callbackUrl = new Uri(callbackUrl, confirmUrl);
 
-            return callbackUrl;
-        }
+        //    return callbackUrl;
+        //}
 
         public async Task<bool> ExistsUser(string email)
         {

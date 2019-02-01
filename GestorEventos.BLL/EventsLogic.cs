@@ -242,6 +242,11 @@ namespace GestorEventos.BLL
             _sendgridLogic.SendCampaignEmail(eventId);
         }
 
+        public IEnumerable<Participant> GetParticipants(int eventId)
+        {
+            return _participantRepository.List(p => p.EventId == eventId);
+        }
+
         #endregion
 
         #region Event Topics

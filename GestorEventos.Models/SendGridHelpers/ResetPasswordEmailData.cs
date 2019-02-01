@@ -6,8 +6,5 @@ namespace GestorEventos.Models.SendGridHelpers
     {
         [JsonProperty("linkUrl")]
         public string LinkUrl { get; set; }
-
-        [JsonProperty("code")]
-        public string Code { get; set; }
     }
 }

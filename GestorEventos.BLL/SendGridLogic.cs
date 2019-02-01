@@ -44,7 +44,7 @@ namespace GestorEventos.BLL
             return await SendRegistrationEmail(recipName, recipEmail, templateId, linkUrl);
         }
 
-        public async Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl, string code)
+        public async Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl)
         {
             var templateId = _options.TemplatePasswordReset;
 
@@ -52,7 +52,6 @@ namespace GestorEventos.BLL
             var dynamicTemplateData = new ResetPasswordEmailData
             {
                 LinkUrl = linkUrl,
-                Code = code
             };
 
             return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
