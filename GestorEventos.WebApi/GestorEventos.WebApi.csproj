@@ -12,10 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="DataFiles\activitytypes.json" />
     <Content Remove="DataFiles\countries.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="DataFiles\activitytypes.json" />
     <None Include="DataFiles\countries.json" />
   </ItemGroup>
 
