@@ -88,15 +88,21 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address1");
+
+                    b.Property<string>("Address2");
+
+                    b.Property<string>("CellPhone");
+
+                    b.Property<string>("City");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Country");
+
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("Description");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -108,6 +114,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("FirstName");
 
                     b.Property<string>("Image");
+
+                    b.Property<string>("Job");
 
                     b.Property<string>("LastName");
 
@@ -121,11 +129,11 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256);
 
+                    b.Property<string>("Organization");
+
                     b.Property<string>("PasswordHash");
 
-                    b.Property<string>("Phone1");
-
-                    b.Property<string>("Phone2");
+                    b.Property<string>("Phone");
 
                     b.Property<string>("PhoneNumber");
 

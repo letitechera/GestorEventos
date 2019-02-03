@@ -63,19 +63,6 @@ namespace GestorEventos.WebApi.Controllers
             }
         }
 
-        [HttpGet("{id}/dates")]
-        public EventDates GetEventDates(int id)
-        {
-            try
-            {
-                return _eventsLogic.GetEventDates(id);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
         [Route("CreateEvent")]
         [HttpPost]
         public IActionResult CreateEvent([FromBody]Event _event)
@@ -159,27 +146,19 @@ namespace GestorEventos.WebApi.Controllers
             return _eventsLogic.GetAllTopics();
         }
 
-        [Route("Accredit")]
+        [Route("Accredit/{participantId}")]
         [HttpGet]
-        public IActionResult Accredit(string qrCode)
+        public IActionResult Accredit(int participantId)
         {
-            var result = _eventsLogic.Accredit(qrCode);
+            var result = _eventsLogic.Accredit(participantId);
             return Ok(result);
         }
 
-        [Route("SendCampaign/{eventId}")]
-        [HttpPost]
-        public IActionResult SendCampaign(int eventId)
+        [Route("{eventId}/participants")]
+        [HttpGet]
+        public IEnumerable<Participant> GetParticipants(int eventId)
         {
-            try
-            {
-                _sendGridLogic.SendCampaignEmail(eventId);
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return _eventsLogic.GetParticipants(eventId);
         }
     }
 }
