@@ -15,10 +15,12 @@ namespace GestorEventos.WebApi.Controllers
     public class EventsController : Controller
     {
         private readonly IEventsLogic _eventsLogic;
+        private readonly ISendGridLogic _sendGridLogic;
 
-        public EventsController(IEventsLogic eventsLogic)
+        public EventsController(IEventsLogic eventsLogic, ISendGridLogic sendGridLogic)
         {
             _eventsLogic = eventsLogic;
+            _sendGridLogic = sendGridLogic;
         }
 
         [Route("all")]
@@ -157,12 +159,27 @@ namespace GestorEventos.WebApi.Controllers
             return _eventsLogic.GetAllTopics();
         }
 
-        [Route("accredit")]
+        [Route("Accredit")]
         [HttpGet]
         public IActionResult Accredit(string qrCode)
         {
             var result = _eventsLogic.Accredit(qrCode);
             return Ok(result);
+        }
+
+        [Route("SendCampaign/{eventId}")]
+        [HttpPost]
+        public IActionResult SendCampaign(int eventId)
+        {
+            try
+            {
+                _sendGridLogic.SendCampaignEmail(eventId);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

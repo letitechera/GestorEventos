@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
-using GestorEventos.Core;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.SendGridHelpers;
 using GestorEventos.WebApi.Models;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -79,6 +76,22 @@ namespace GestorEventos.BLL
             var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, qrCode.ToString());
 
             return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
+        }
+
+        public async Task SendCampaignEmail(int eventId)
+        {
+            var _event = _eventsRepository.FindById(eventId);
+            var attendants = _attendantsRepository.List();
+
+            foreach (var item in attendants)
+            {
+                var recipient = new EmailAddress(item.Email, item.FullName);
+                var templateId = _options.TemplateEventCampaign;
+                var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
+                var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl);
+
+                await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
+            }
         }
 
         #endregion

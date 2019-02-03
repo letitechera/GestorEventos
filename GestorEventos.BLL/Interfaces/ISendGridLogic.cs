@@ -12,5 +12,6 @@ namespace GestorEventos.BLL.Interfaces
         Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl);
         //Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendQRCodeEmail(Participant participant, Bitmap qrCode);
+        Task SendCampaignEmail(int eventId);
     }
 }
