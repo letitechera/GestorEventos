@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,18 @@ namespace GestorEventos.WebApi.Controllers
 
         #region Schedules
 
-        [Route("{eventId}/all")]
+        [Route("event/{eventId}/all")]
         [HttpGet]
-        public IEnumerable<EventSchedule> GetSchedulesByEvent(int eventId)
+        public IEnumerable<ScheduleUI> GetSchedulesByEvent(int eventId)
         {
-            return _schedulesLogic.GetSchedules(eventId);
+            try
+            {
+                return _schedulesLogic.GetSchedules(eventId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet("{id}")]
@@ -127,7 +135,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteActivity/{id}")]
+        [HttpDelete("DeleteActivity/{activityId}")]
         public IActionResult DeleteActivity(int activityId)
         {
             if (_activitiesLogic.DeleteActivity(activityId))
@@ -135,6 +143,13 @@ namespace GestorEventos.WebApi.Controllers
                 return Ok();
             }
             return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        [Route("activitytypes")]
+        [HttpGet]
+        public IEnumerable<ActivityType> GetActivityTypes()
+        {
+            return _activitiesLogic.GetActivityTypes();
         }
 
         #endregion

@@ -110,7 +110,7 @@ namespace GestorEventos.BLL
         {
             try
             {
-                var ret = _eventsRepository.List(e => e.CreatedById == userId).ToList().Select(e => new EventUI(e, e.Location.Name, e.EventTopic.Name));
+                var ret = _eventsRepository.List(e => e.CreatedById == userId).ToList().Select(e => new EventUI(e));
                 return ret;
             }
             catch (Exception e)
@@ -124,7 +124,7 @@ namespace GestorEventos.BLL
             try
             {
                 var eventData = _eventsRepository.FindById(eventId);
-                return new EventUI(eventData, eventData.Location.Name, eventData.EventTopic.Name);
+                return new EventUI(eventData);
             }
             catch (Exception e)
             {

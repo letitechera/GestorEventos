@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace GestorEventos.Models.Entities
         public string Contact { get; set; }
         public string Image { get; set; }
         public int ActivityId { get; set; }
-
+        [JsonIgnore]
         public virtual Activity Activity { get; set; }
     }
 }

@@ -63,6 +63,19 @@ namespace GestorEventos.WebApi.Controllers
             }
         }
 
+        [HttpGet("{id}/dates")]
+        public EventDates GetEventDates(int id)
+        {
+            try
+            {
+                return _eventsLogic.GetEventDates(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         [Route("CreateEvent")]
         [HttpPost]
         public IActionResult CreateEvent([FromBody]Event _event)

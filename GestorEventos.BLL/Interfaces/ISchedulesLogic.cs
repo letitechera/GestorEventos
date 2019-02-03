@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 
 namespace GestorEventos.BLL.Interfaces
 {
@@ -11,7 +12,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool DeleteSchedule(int scheduleId);
 
-        IEnumerable<EventSchedule> GetSchedules(int eventId);
+        IEnumerable<ScheduleUI> GetSchedules(int eventId);
 
         EventSchedule GetSchedule(int scheduleId);
     }

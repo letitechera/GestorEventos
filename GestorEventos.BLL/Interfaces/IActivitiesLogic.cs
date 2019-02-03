@@ -16,5 +16,7 @@ namespace GestorEventos.BLL.Interfaces
         IEnumerable<Activity> GetActivities(int scheduleId);
 
         Activity GetActivity(int activityId);
+
+        IEnumerable<ActivityType> GetActivityTypes();
     }
 }
