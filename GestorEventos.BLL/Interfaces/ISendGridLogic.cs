@@ -1,6 +1,5 @@
 ﻿using GestorEventos.Models.Entities;
 using SendGrid;
-using System.Drawing;
 using System.Threading.Tasks;
 
 namespace GestorEventos.BLL.Interfaces
@@ -11,7 +10,7 @@ namespace GestorEventos.BLL.Interfaces
         Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl);
         //Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl);
-        Task<Response> SendQRCodeEmail(Participant participant, Bitmap qrCode);
+        Task<Response> SendQRCodeEmail(Participant participant, byte[] qrCode);
         Task SendCampaignEmail(int eventId);
     }
 }

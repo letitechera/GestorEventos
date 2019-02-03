@@ -100,10 +100,26 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("reset-passsword")]
+        [Route("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
             var result = await _authLogic.ResetPassword(request);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var result = await _authLogic.ChangePassword(request);
 
             if (result.Succeeded)
             {

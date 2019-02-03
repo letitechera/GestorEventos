@@ -24,7 +24,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool CancelEvent(int eventId);
 
-        Bitmap RegisterToEvent(int eventId, Attendant attendant);
+        byte[] RegisterToEvent(int eventId, Attendant attendant);
 
         //bool SaveImage(int eventId, object image);
 
@@ -34,6 +34,8 @@ namespace GestorEventos.BLL.Interfaces
 
         IEnumerable<EventTopic> GetAllTopics();
 
-        bool Accredit(string qrCode);
+        Participant Accredit(int participantId);
+
+        IEnumerable<Participant> GetParticipants(int eventId);
     }
 }

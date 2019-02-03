@@ -13,6 +13,7 @@ namespace GestorEventos.BLL.Interfaces
         Task DeleteAccount(DeleteAccountRequest user);     
         Task<ResetPasswordResult> ForgotPassword(ForgotPasswordRequest forgotPassword);
         Task<IdentityResult> ResetPassword(ResetPasswordRequest resetPassword);
+        Task<IdentityResult> ChangePassword(ChangePasswordRequest changePassword);
         Task<bool> ExistsUser(string email);
     }
 }

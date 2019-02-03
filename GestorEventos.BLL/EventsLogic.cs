@@ -5,7 +5,6 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
-using System.Drawing;
 using Microsoft.Extensions.Configuration;
 
 namespace GestorEventos.BLL
@@ -145,20 +144,7 @@ namespace GestorEventos.BLL
             }
         }
 
-        public EventDates GetEventDates(int eventId)
-        {
-            try
-            {
-                var _event = _eventsRepository.FindById(eventId);
-                return new EventDates { StartDate = _event.StartDate, EndDate = _event.EndDate };
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public Bitmap RegisterToEvent(int eventId, Attendant attendant)
+        public byte[] RegisterToEvent(int eventId, Attendant attendant)
         {
             var participant = new Participant
             {
@@ -256,6 +242,11 @@ namespace GestorEventos.BLL
             _sendgridLogic.SendCampaignEmail(eventId);
         }
 
+        public IEnumerable<Participant> GetParticipants(int eventId)
+        {
+            return _participantRepository.List(p => p.EventId == eventId);
+        }
+
         #endregion
 
         #region Event Topics
@@ -330,9 +321,10 @@ namespace GestorEventos.BLL
             }
         }
 
-        public bool Accredit(string qrCode)
+        public Participant Accredit(int participantId)
         {
-            throw new NotImplementedException();
+            var participant = _participantRepository.FindById(participantId);
+            return participant;
         }
 
         #endregion
