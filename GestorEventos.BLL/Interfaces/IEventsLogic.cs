@@ -35,5 +35,7 @@ namespace GestorEventos.BLL.Interfaces
         Participant Accredit(int participantId);
 
         IEnumerable<Participant> GetParticipants(int eventId);
+
+        Participant GetParticipant(int participantId);
     }
 }

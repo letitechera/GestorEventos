@@ -20,9 +20,9 @@ namespace GestorEventos.BLL
         private readonly ISendGridLogic _sendgridLogic;
         private readonly IConfiguration Configuration;
 
-        public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
+        public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository,
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
             ISendGridLogic sendgridLogic, IConfiguration configuration)
         {
             _eventsRepository = eventsRepository;
@@ -255,7 +255,7 @@ namespace GestorEventos.BLL
         {
             try
             {
-               var existant = _topicsRepository.List(t => t.Name == topicName).FirstOrDefault();
+                var existant = _topicsRepository.List(t => t.Name == topicName).FirstOrDefault();
 
                 if (existant != null)
                 {
@@ -323,8 +323,13 @@ namespace GestorEventos.BLL
 
         public Participant Accredit(int participantId)
         {
-            var participant = _participantRepository.FindById(participantId);
+            var participant = GetParticipant(participantId);
             return participant;
+        }
+
+        public Participant GetParticipant(int participantId)
+        {
+            return _participantRepository.FindById(participantId);
         }
 
         #endregion

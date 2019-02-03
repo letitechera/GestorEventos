@@ -23,6 +23,8 @@ using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace GestorEventos.WebApi
 {
@@ -94,7 +96,7 @@ namespace GestorEventos.WebApi
             {
                 ValidateIssuer = true,
                 ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
-
+                    
                 ValidateAudience = true,
                 ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
 
@@ -140,6 +142,8 @@ namespace GestorEventos.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSwaggerDocumentation();
+
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
