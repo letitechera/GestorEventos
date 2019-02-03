@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace GestorEventos.Models.Entities
@@ -13,7 +14,7 @@ namespace GestorEventos.Models.Entities
 
         public virtual EventSchedule EventSchedule { get; set; }
         public virtual ActivityType ActivityType { get; set; }
-        //[JsonIgnore]
+        
         public virtual IList<Speaker> Speakers { get; set; }
     }
 }

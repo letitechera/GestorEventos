@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace GestorEventos.BLL
@@ -57,11 +59,17 @@ namespace GestorEventos.BLL
             }
         }
 
-        public IEnumerable<EventSchedule> GetSchedules(int eventId)
+        public IEnumerable<ScheduleUI> GetSchedules(int eventId)
         {
             try
             {
-                return _schedulesRepository.List(s => s.EventId == eventId);
+                var schedules =  _schedulesRepository.List(s => s.EventId == eventId).Select(e => new ScheduleUI(e)).ToList();
+                foreach (var s in schedules)
+                {
+                    var activities = _activitiesRepository.List(a => a.EventScheduleId == s.Id).Select(a => new ActivityUI(a)).ToList();
+                    s.Activities = activities;
+                }
+                return schedules;
             }
             catch (Exception e)
             {

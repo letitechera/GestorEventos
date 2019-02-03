@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using GestorEventos.Models.WebApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,16 @@ namespace GestorEventos.WebApi.Controllers
 
         [Route("event/{eventId}/all")]
         [HttpGet]
-        public IEnumerable<EventSchedule> GetSchedulesByEvent(int eventId)
+        public IEnumerable<ScheduleUI> GetSchedulesByEvent(int eventId)
         {
-            return _schedulesLogic.GetSchedules(eventId);
+            try
+            {
+                return _schedulesLogic.GetSchedules(eventId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet("{id}")]
