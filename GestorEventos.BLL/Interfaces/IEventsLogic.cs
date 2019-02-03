@@ -20,8 +20,6 @@ namespace GestorEventos.BLL.Interfaces
 
         Event GetEvent(int eventId);
 
-        EventDates GetEventDates(int eventId);
-
         bool CancelEvent(int eventId);
 
         byte[] RegisterToEvent(int eventId, Attendant attendant);
