@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GestorEventos.BLL.Interfaces;
+using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,42 +13,41 @@ namespace GestorEventos.WebApi.Controllers
     public class PublicPagesController : Controller
     {
         private readonly IEventsLogic _eventsLogic;
+        private readonly ISchedulesLogic _schedulesLogic;
 
-        public PublicPagesController(IEventsLogic eventsLogic)
+        public PublicPagesController(IEventsLogic eventsLogic, ISchedulesLogic schedulesLogic)
         {
             _eventsLogic = eventsLogic;
+            _schedulesLogic = schedulesLogic;
         }
 
-        [Route("all")]
+        [Route("events")]
         [HttpGet]
         public IEnumerable<EventUI> GetAllEvents()
         {
             return _eventsLogic.GetEvents();
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Route("events/{id}")]
+        [HttpGet]
+        public Event GetEvent(int id)
         {
-            return "value";
+            return _eventsLogic.GetEvent(id);
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [Route("event/{eventId}/schedule")]
+        [HttpGet]
+        public IEnumerable<ScheduleUI> GetSchedulesByEvent(int eventId)
         {
+            try
+            {
+                return _schedulesLogic.GetSchedules(eventId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
