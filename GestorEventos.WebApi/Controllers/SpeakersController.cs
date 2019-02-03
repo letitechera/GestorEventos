@@ -64,7 +64,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteSpeaker/{id}")]
+        [HttpDelete("DeleteSpeaker/{speakerId}")]
         public IActionResult DeleteSpeaker(int speakerId)
         {
             if (_speakersLogic.DeleteSpeaker(speakerId))
