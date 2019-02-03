@@ -13,11 +13,14 @@ namespace GestorEventos.BLL
     {
         private readonly IRepository<EventSchedule> _schedulesRepository;
         private readonly IRepository<Activity> _activitiesRepository;
+        private readonly IRepository<Speaker> _speakersRepository;
 
-        public SchedulesLogic(IRepository<EventSchedule> schedulesRepository, IRepository<Activity> activitiesRepository)
+        public SchedulesLogic(IRepository<EventSchedule> schedulesRepository, IRepository<Activity> activitiesRepository,
+            IRepository<Speaker> speakersRepository)
         {
             _schedulesRepository = schedulesRepository;
             _activitiesRepository = activitiesRepository;
+            _speakersRepository = speakersRepository;
         }
 
         #region Schedules
@@ -50,6 +53,7 @@ namespace GestorEventos.BLL
         {
             try
             {
+                DeleteActivities(scheduleId);
                 _schedulesRepository.Delete(scheduleId);
                 return true;
             }
@@ -82,6 +86,29 @@ namespace GestorEventos.BLL
             try
             {
                 return _schedulesRepository.FindById(scheduleId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void DeleteActivities(int scheduleId)
+        {
+            try
+            {
+                var toDelete = _activitiesRepository.List(a => a.EventScheduleId == scheduleId);
+                foreach (var a in toDelete)
+                {
+                    var speakers = _speakersRepository.List(s => s.ActivityId == a.Id);
+                    _speakersRepository.DeleteRange(speakers);
+
+                }
+                _activitiesRepository.DeleteRange(toDelete);
             }
             catch (Exception e)
             {

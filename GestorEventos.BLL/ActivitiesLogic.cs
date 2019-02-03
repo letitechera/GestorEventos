@@ -68,6 +68,7 @@ namespace GestorEventos.BLL
         {
             try
             {
+                DeleteSpeakers(activityId);
                 _activitiesRepository.Delete(activityId);
                 return true;
             }
@@ -106,6 +107,23 @@ namespace GestorEventos.BLL
             try
             {
                 return _atypeRepository.List();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void DeleteSpeakers(int activityId)
+        {
+            try
+            {
+                var toDelete = _speakersRepository.List(a => a.ActivityId == activityId);
+                _speakersRepository.DeleteRange(toDelete);
             }
             catch (Exception e)
             {

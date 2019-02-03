@@ -78,7 +78,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteSchedule/{id}")]
+        [HttpDelete("DeleteSchedule/{scheduleId}")]
         public IActionResult DeleteSchedule(int scheduleId)
         {
             if (_schedulesLogic.DeleteSchedule(scheduleId))
