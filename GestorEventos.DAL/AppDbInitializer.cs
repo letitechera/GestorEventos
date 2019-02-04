@@ -69,6 +69,7 @@ namespace GestorEventos.DAL
         public static void Seed(AppDbContext context)
         {
             InsertGeographics(context);
+            InsertActivityTypes(context);
             context.Dispose();
         }
 
@@ -111,6 +112,35 @@ namespace GestorEventos.DAL
                                 context.SaveChanges();
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        private static void InsertActivityTypes(AppDbContext context)
+        {
+            //Remove Json Ignore from cities list in Country for this init to work, add it again for Api calls to work.
+            List<ActivityType> items = new List<ActivityType>();
+            using (StreamReader r = new StreamReader("DataFiles/activitytypes.json"))
+            {
+                string json = r.ReadToEnd();
+                items = JsonConvert.DeserializeObject<List<ActivityType>>(json);
+            }
+            if (items.Count > 0)
+            {
+                foreach (ActivityType a in items)
+                {
+                    var existant = context.ActivityTypes.Where(e => e.Name == a.Name).FirstOrDefault();
+                    var id = 0;
+                    if (existant == null)
+                    {
+                        var e = context.ActivityTypes.Add(a);
+                        context.SaveChanges();
+                        id = e.Entity.Id;
+                    }
+                    else
+                    {
+                        id = existant.Id;
                     }
                 }
             }

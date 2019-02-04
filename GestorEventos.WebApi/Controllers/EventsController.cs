@@ -30,7 +30,7 @@ namespace GestorEventos.WebApi.Controllers
 
         [Route("all")]
         [HttpGet]
-        public IEnumerable<Event> GetAllEvents()
+        public IEnumerable<EventUI> GetAllEvents()
         {
             return _eventsLogic.GetEvents();
         }

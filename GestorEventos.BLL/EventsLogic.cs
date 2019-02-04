@@ -59,26 +59,6 @@ namespace GestorEventos.BLL
             }
         }
 
-        //TODO: Load Event Image To Cloud
-        //public bool SaveImage(int eventId, object file)
-        //{
-        //    try
-        //    {
-        //        var speakersBlob = "";
-        //        var imageUrl = _imagesLogic.LoadImage(file, speakersBlob);
-
-        //        var _event = _eventsRepository.FindById(eventId);
-        //        _event.Image = imageUrl;
-        //        _eventsRepository.Update(_event);
-
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return false;
-        //    }
-        //}
-
         public bool DeleteEvent(int eventId)
         {
             try
@@ -94,11 +74,11 @@ namespace GestorEventos.BLL
             }
         }
 
-        public IEnumerable<Event> GetEvents()
+        public IEnumerable<EventUI> GetEvents()
         {
             try
             {
-                return _eventsRepository.List();
+                return _eventsRepository.List().Select(e => new EventUI(e)).ToList();
             }
             catch (Exception e)
             {
@@ -110,7 +90,7 @@ namespace GestorEventos.BLL
         {
             try
             {
-                var ret = _eventsRepository.List(e => e.CreatedById == userId).ToList().Select(e => new EventUI(e, e.Location.Name, e.EventTopic.Name));
+                var ret = _eventsRepository.List(e => e.CreatedById == userId).Select(e => new EventUI(e)).ToList();
                 return ret;
             }
             catch (Exception e)
@@ -124,7 +104,7 @@ namespace GestorEventos.BLL
             try
             {
                 var eventData = _eventsRepository.FindById(eventId);
-                return new EventUI(eventData, eventData.Location.Name, eventData.EventTopic.Name);
+                return new EventUI(eventData);
             }
             catch (Exception e)
             {

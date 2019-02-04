@@ -12,7 +12,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool DeleteEvent(int eventId);
 
-        IEnumerable<Event> GetEvents();
+        IEnumerable<EventUI> GetEvents();
 
         IEnumerable<EventUI> GetEvents(string userId);
 

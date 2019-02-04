@@ -12,11 +12,14 @@ namespace GestorEventos.BLL
     {
         private readonly IRepository<Activity> _activitiesRepository;
         private readonly IRepository<Speaker> _speakersRepository;
+        private readonly IRepository<ActivityType> _atypeRepository;
 
-        public ActivitiesLogic(IRepository<Activity> activitiesRepository, IRepository<Speaker> speakersRepository)
+        public ActivitiesLogic(IRepository<Activity> activitiesRepository, IRepository<Speaker> speakersRepository,
+            IRepository<ActivityType> atypeRepository)
         {
             _activitiesRepository = activitiesRepository;
             _speakersRepository = speakersRepository;
+            _atypeRepository = atypeRepository;
         }
 
         #region Activities
@@ -65,6 +68,7 @@ namespace GestorEventos.BLL
         {
             try
             {
+                DeleteSpeakers(activityId);
                 _activitiesRepository.Delete(activityId);
                 return true;
             }
@@ -91,6 +95,35 @@ namespace GestorEventos.BLL
             try
             {
                 return _activitiesRepository.FindById(activityId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public IEnumerable<ActivityType> GetActivityTypes()
+        {
+            try
+            {
+                return _atypeRepository.List();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void DeleteSpeakers(int activityId)
+        {
+            try
+            {
+                var toDelete = _speakersRepository.List(a => a.ActivityId == activityId);
+                _speakersRepository.DeleteRange(toDelete);
             }
             catch (Exception e)
             {
