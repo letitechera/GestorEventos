@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.WebApi.Utility;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestorEventos.WebApi.Controllers
@@ -17,20 +12,24 @@ namespace GestorEventos.WebApi.Controllers
     public class CertificatesController : ControllerBase
     {
         private readonly IEventsLogic _eventsLogic;
+        private readonly ISendGridLogic _sendGridLogic;
         private readonly IConverter _converter;
 
         public CertificatesController(IEventsLogic eventsLogic, ISendGridLogic sendGridLogic, IConverter converter)
         {
             _eventsLogic = eventsLogic;
+            _sendGridLogic = sendGridLogic;
             _converter = converter;
         }
 
         [Route("{participantId}")]
         [HttpGet]
-        public IActionResult CreateCertificate(int participantId)
+        public IActionResult SendCertificate(int participantId)
         {
-            var participant = _eventsLogic.GetParticipant(participantId);
 
+            // Create Certificate
+            var participant = _eventsLogic.GetParticipant(participantId);
+            var path = string.Format(@"C:\Certificates\{0}_{1}.pdf", participant.Event.Name, participant.Attendant.FullName);
             var globalSettings = new GlobalSettings
             {
                 ColorMode = ColorMode.Color,
@@ -38,7 +37,7 @@ namespace GestorEventos.WebApi.Controllers
                 PaperSize = PaperKind.A4,
                 Margins = new MarginSettings { Top = 10 },
                 DocumentTitle = "Certificate",
-                Out = string.Format(@"C:\Certificates\{0}_{1}.pdf", participant.Event.Name, participant.Attendant.FullName)
+                Out = path
             };
 
             var objectSettings = new ObjectSettings
@@ -58,7 +57,11 @@ namespace GestorEventos.WebApi.Controllers
 
             _converter.Convert(pdf);
 
-            return Ok("Successfully created PDF document.");
+            // Send Certificate
+            var doc = System.IO.File.ReadAllBytes(path);
+            _sendGridLogic.SendCertificateEmail(participant.Attendant.Email, doc);
+
+            return Ok("Successfully sent PDF document.");
         }
     }
 }
