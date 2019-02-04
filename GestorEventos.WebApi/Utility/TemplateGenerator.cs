@@ -1,5 +1,8 @@
 ﻿using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
+using System;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Text;
 
 namespace GestorEventos.WebApi.Utility

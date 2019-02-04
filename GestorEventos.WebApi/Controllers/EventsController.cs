@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
-using GestorEventos.WebApi.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +15,11 @@ namespace GestorEventos.WebApi.Controllers
     {
         private readonly IEventsLogic _eventsLogic;
         private readonly ISendGridLogic _sendGridLogic;
-        private IConverter _converter;
 
-        public EventsController(IEventsLogic eventsLogic, ISendGridLogic sendGridLogic, IConverter converter)
+        public EventsController(IEventsLogic eventsLogic, ISendGridLogic sendGridLogic)
         {
             _eventsLogic = eventsLogic;
             _sendGridLogic = sendGridLogic;
-            _converter = converter;
         }
 
         [Route("all")]
@@ -164,42 +158,6 @@ namespace GestorEventos.WebApi.Controllers
         public IEnumerable<Participant> GetParticipants(int eventId)
         {
             return _eventsLogic.GetParticipants(eventId);
-        }
-
-        [Route("certificate/{participantId}")]
-        [HttpGet]
-        public IActionResult CreateCertificate(int participantId)
-        {
-            var participant = _eventsLogic.GetParticipant(participantId);
-
-            var globalSettings = new GlobalSettings
-            {
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Portrait,
-                PaperSize = PaperKind.A4,
-                Margins = new MarginSettings { Top = 10 },
-                DocumentTitle = "Certificate",
-                Out = string.Format(@"C:\Certificates\{0}_{1}.pdf", participant.Event.Name, participant.Attendant.FullName)
-            };
-
-            var objectSettings = new ObjectSettings
-            {
-                PagesCount = true,
-                HtmlContent = TemplateGenerator.GetHTMLString(participant),
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
-                HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-                FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
-            };
-
-            var pdf = new HtmlToPdfDocument()
-            {
-                GlobalSettings = globalSettings,
-                Objects = { objectSettings }
-            };
-
-            _converter.Convert(pdf);
-
-            return Ok("Successfully created PDF document.");
         }
     }
 }
