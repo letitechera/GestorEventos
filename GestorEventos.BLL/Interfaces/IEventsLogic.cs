@@ -22,7 +22,7 @@ namespace GestorEventos.BLL.Interfaces
 
         bool CancelEvent(int eventId);
 
-        byte[] RegisterToEvent(int eventId, Attendant attendant);
+        byte[] RegisterToEvent(Participant participant);
 
         //bool SaveImage(int eventId, object image);
 

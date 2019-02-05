@@ -158,7 +158,7 @@ namespace GestorEventos.BLL
             var recipients = new List<EmailAddress> { recipient };
             msg.AddTos(recipients);
 
-            msg.AddAttachment("certificate.pdf", certificate, "application/pdf","attachment","banner");
+            msg.AddAttachment("certificate.pdf", certificate, "application/pdf", "attachment", "banner");
             msg.TemplateId = templateId;
 
             return await _client.SendEmailAsync(msg);

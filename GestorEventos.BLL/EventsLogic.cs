@@ -124,23 +124,18 @@ namespace GestorEventos.BLL
             }
         }
 
-        public byte[] RegisterToEvent(int eventId, Attendant attendant)
+        public byte[] RegisterToEvent(Participant participant)
         {
-            var participant = new Participant
-            {
-                EventId = eventId
-            };
-
             try
             {
                 // Check if an attendant with the same Email exists
                 var existant = _attendantsRepository
                     .List()
-                    .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
+                    .FirstOrDefault(x => x.Email == participant.Email);
 
                 if (existant == null)
                 {
-                    participant.AttendantId = _attendantsRepository.Add(attendant);
+                    participant.AttendantId = _attendantsRepository.Add(existant);
                 }
                 else
                 {
@@ -149,17 +144,17 @@ namespace GestorEventos.BLL
 
                 var registered = _participantRepository
                     .List()
-                    .FirstOrDefault(x => x.AttendantId == participant.AttendantId && x.EventId == participant.EventId);
+                    .FirstOrDefault(x => x.Email == participant.Email && x.EventId == participant.EventId);
 
                 if (registered == null)
                 {
                     // Save participant and get registration ID
                     _participantRepository.Add(participant);
 
-                    var registrationID = _participantRepository.List(p => p.EventId == eventId && p.AttendantId == participant.AttendantId).FirstOrDefault().Id;
+                    var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
 
                     // Generate QR Code
-                    var qrCode = _accreditationLogic.GenerateQRCode(registrationID);
+                    var qrCode = _accreditationLogic.GenerateQRCode(participantId);
 
                     // Send Email with QR to Participant
                     _sendgridLogic.SendQRCodeEmail(participant, qrCode);
