@@ -20,9 +20,9 @@ namespace GestorEventos.BLL
         private readonly ISendGridLogic _sendgridLogic;
         private readonly IConfiguration Configuration;
 
-        public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository, 
+        public EventsLogic(IRepository<Event> eventsRepository, IRepository<EventSchedule> schedulesRepository,
             IRepository<Participant> participantRepository, IRepository<EventTopic> topicsRepository,
-            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic, 
+            IRepository<Attendant> attendantsRepository, IAccreditationLogic accreditationLogic,
             ISendGridLogic sendgridLogic, IConfiguration configuration)
         {
             _eventsRepository = eventsRepository;
@@ -124,23 +124,18 @@ namespace GestorEventos.BLL
             }
         }
 
-        public byte[] RegisterToEvent(int eventId, Attendant attendant)
+        public byte[] RegisterToEvent(Participant participant)
         {
-            var participant = new Participant
-            {
-                EventId = eventId
-            };
-
             try
             {
                 // Check if an attendant with the same Email exists
                 var existant = _attendantsRepository
                     .List()
-                    .FirstOrDefault(x => x.Email.ToLower() == attendant.Email.ToLower());
+                    .FirstOrDefault(x => x.Email == participant.Email);
 
                 if (existant == null)
                 {
-                    participant.AttendantId = _attendantsRepository.Add(attendant);
+                    participant.AttendantId = _attendantsRepository.Add(existant);
                 }
                 else
                 {
@@ -149,17 +144,17 @@ namespace GestorEventos.BLL
 
                 var registered = _participantRepository
                     .List()
-                    .FirstOrDefault(x => x.AttendantId == participant.AttendantId && x.EventId == participant.EventId);
+                    .FirstOrDefault(x => x.Email == participant.Email && x.EventId == participant.EventId);
 
                 if (registered == null)
                 {
                     // Save participant and get registration ID
                     _participantRepository.Add(participant);
 
-                    var registrationID = _participantRepository.List(p => p.EventId == eventId && p.AttendantId == participant.AttendantId).FirstOrDefault().Id;
+                    var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
 
                     // Generate QR Code
-                    var qrCode = _accreditationLogic.GenerateQRCode(registrationID);
+                    var qrCode = _accreditationLogic.GenerateQRCode(participantId);
 
                     // Send Email with QR to Participant
                     _sendgridLogic.SendQRCodeEmail(participant, qrCode);
@@ -235,7 +230,7 @@ namespace GestorEventos.BLL
         {
             try
             {
-               var existant = _topicsRepository.List(t => t.Name == topicName).FirstOrDefault();
+                var existant = _topicsRepository.List(t => t.Name == topicName).FirstOrDefault();
 
                 if (existant != null)
                 {
@@ -303,8 +298,13 @@ namespace GestorEventos.BLL
 
         public Participant Accredit(int participantId)
         {
-            var participant = _participantRepository.FindById(participantId);
+            var participant = GetParticipant(participantId);
             return participant;
+        }
+
+        public Participant GetParticipant(int participantId)
+        {
+            return _participantRepository.FindById(participantId);
         }
 
         #endregion

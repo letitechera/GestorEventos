@@ -104,6 +104,21 @@ namespace GestorEventos.BLL
 
         #endregion
 
+        #region Certificates Mailing
+
+        public async Task<Response> SendCertificateEmail(string recipEmail, byte[] certificate)
+        {
+            var templateId = _options.TemplateCertificate;
+
+            var recipient = new EmailAddress(recipEmail);
+
+            string base64Cert = Convert.ToBase64String(certificate);
+
+            return await SendAttachmentEmail(recipient, templateId, base64Cert);
+        }
+
+        #endregion
+
         #region Private Methods
 
         private async Task<Response> SendRegistrationEmail(string recipName, string recipEmail, string templateId, string linkUrl)
@@ -129,6 +144,21 @@ namespace GestorEventos.BLL
             msg.AddTos(recipients);
 
             msg.SetTemplateData(dynamicTemplateData);
+            msg.TemplateId = templateId;
+
+            return await _client.SendEmailAsync(msg);
+        }
+
+        private async Task<Response> SendAttachmentEmail(EmailAddress recipient, string templateId, string certificate)
+        {
+            var msg = new SendGridMessage();
+
+            msg.SetFrom(_from);
+
+            var recipients = new List<EmailAddress> { recipient };
+            msg.AddTos(recipients);
+
+            msg.AddAttachment("certificate.pdf", certificate, "application/pdf", "attachment", "banner");
             msg.TemplateId = templateId;
 
             return await _client.SendEmailAsync(msg);

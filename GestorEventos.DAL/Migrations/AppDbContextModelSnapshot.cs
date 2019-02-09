@@ -427,19 +427,29 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<int>("AttendantId");
 
+                    b.Property<string>("CellPhone");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<string>("Email");
+
                     b.Property<int>("EventId");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
 
                     b.Property<string>("ModifiedById");
 
                     b.Property<string>("ModifiedByName");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Phone");
 
                     b.Property<string>("QRCode");
 
