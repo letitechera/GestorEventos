@@ -3,8 +3,10 @@ using GestorEventos.DAL.Repositories.Interfaces;
 using GestorEventos.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GestorEventos.BLL
 {
@@ -81,6 +83,13 @@ namespace GestorEventos.BLL
             {
                 throw e;
             }
+        }
+
+        public Attendant ExistsAttendant(string email)
+        {
+            var at = _attendantsRepository.List(a => a.Email == email || !string.IsNullOrEmpty(a.Email))
+                .FirstOrDefault();
+            return at;
         }
 
         #endregion

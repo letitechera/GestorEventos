@@ -10,5 +10,7 @@ namespace GestorEventos.BLL.Interfaces
     public interface IFilesLogic
     {
         Task<string> LoadEventImage(int eventId, IFormFile file);
+
+        bool ImportAttendantsFromXml(IFormFile file);
     }
 }

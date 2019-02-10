@@ -6,6 +6,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using GestorEventos.Models.Entities;
+using System.IO;
+using OfficeOpenXml;
+using System.Linq;
 
 namespace GestorEventos.BLL
 {
@@ -13,11 +16,13 @@ namespace GestorEventos.BLL
     {
         private readonly IConfiguration Configuration;
         private readonly IEventsLogic _eventsLogic;
+        private readonly IAttendantsLogic _attendantsLogic;
 
-        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic)
+        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic)
         {
             Configuration = configuration;
             _eventsLogic = eventsLogic;
+            _attendantsLogic = attendantsLogic;
         }
 
         public async Task<string> LoadEventImage(int eventId, IFormFile file)
@@ -54,12 +59,111 @@ namespace GestorEventos.BLL
             }
             else
             {
-                // Otherwise, let the user know that they need to define the environment variable.
-                //"A connection string has not been defined in the system environment variables. " +
-                //"Add a environment variable named 'storageconnectionstring' with your storage " +
-                //"connection string as a value."
                 return "";
             }
+        }
+
+        public bool ImportAttendantsFromXml(IFormFile file)
+        {
+
+            Stream stream = file.OpenReadStream();
+
+            var excel = new ExcelPackage(stream);
+            var workbook = excel.Workbook;
+
+            var sheet = excel.Workbook.Worksheets.First();
+            int colCount = sheet.Dimension.End.Column;  //get Column Count
+            int rowCount = sheet.Dimension.End.Row;     //get row count
+
+            for (int row = 2; row <= rowCount; row++)
+            {
+                var newAttendant = new Attendant();
+                for (int col = 1; col <= colCount; col++)
+                {
+                    var header = sheet.Cells[1, col].Value.ToString().Trim();
+                    var cell = sheet.Cells[row, col].Value.ToString().Trim();
+                    switch (header)
+                    {
+                        case "FirstName":
+                            newAttendant.FirstName = cell;
+                            break;
+                        case "LastName":
+                            newAttendant.LastName = cell;
+                            break;
+                        case "Email":
+                            newAttendant.Email = cell;
+                            break;
+                        case "Phone":
+                            newAttendant.Email = cell;
+                            break;
+                        case "CellPhone":
+                            newAttendant.Email = cell;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                _attendantsLogic.SaveAttendant(newAttendant);
+            }
+
+            return true;
+
+            //var rawContent = string.Empty;
+            //using (var reader = new StreamReader(file.OpenReadStream()))
+            //{
+            //    rawContent = reader.ReadToEnd();
+            //}
+
+            //string content;
+            //try
+            //{
+            //    var aux = rawContent.Split(new[] { "<?xml" }, StringSplitOptions.None);
+            //    aux[1] = "<?xml" + aux[1];
+            //    var clean = aux[1].Split(new[] { "------" }, StringSplitOptions.None);
+            //    content = clean[0];
+            //}
+            //catch (Exception e)
+            //{
+            //    return false;
+            //}
+
+            //var xlist = new ExportableList();
+            //try
+            //{
+            //    if (content != "")
+            //        xlist = (ExportableList)XMLManagement.XMLtoObject(content, typeof(ExportableList));
+            //}
+            //catch (Exception e)
+            //{
+            //    return false;
+            //}
+
+            //if (xlist == null) return false;
+
+            //foreach (Attendant user in xlist.Members)
+            //{
+            //    try
+            //    {
+            //        if (ExistsAttendant(user.Email) == null)
+            //        {
+            //            var added = _attendantsLogic.SaveAttendant(user);
+            //            if (added)
+            //            {
+            //                return true;
+            //            }
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        throw e;
+            //    }
+            //}
+            //return true;
+        }
+
+        public Attendant ExistsAttendant(string email)
+        {
+            return _attendantsLogic.ExistsAttendant(email);
         }
     }
 }
