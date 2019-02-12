@@ -293,6 +293,8 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<float?>("AttendancePercentage");
+
                     b.Property<bool?>("Canceled");
 
                     b.Property<string>("CreatedById");
