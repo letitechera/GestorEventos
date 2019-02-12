@@ -81,23 +81,33 @@ namespace GestorEventos.BLL
                 for (int col = 1; col <= colCount; col++)
                 {
                     var header = sheet.Cells[1, col].Value.ToString().Trim();
-                    var cell = sheet.Cells[row, col].Value.ToString().Trim();
+                    var cellRaw = sheet.Cells[row, col].Value;
+                    var cell = "";
+
+                    if (header == "Email" && cellRaw == null) { return false; }
+
+                    if (cellRaw == null) { continue; }
+
+                    cell = cellRaw.ToString().Trim();
+
                     switch (header)
                     {
-                        case "FirstName":
+                        case "Nombre":
                             newAttendant.FirstName = cell;
                             break;
-                        case "LastName":
+                        case "Apellido":
                             newAttendant.LastName = cell;
                             break;
                         case "Email":
                             newAttendant.Email = cell;
                             break;
-                        case "Phone":
-                            newAttendant.Email = cell;
+                        case "Telefono":
+                            newAttendant.Phone = cell;
                             break;
-                        case "CellPhone":
-                            newAttendant.Email = cell;
+                        case "Celular":
+                            newAttendant.CellPhone = cell;
+                            break;
+                        case null:
                             break;
                         default:
                             break;
@@ -107,58 +117,6 @@ namespace GestorEventos.BLL
             }
 
             return true;
-
-            //var rawContent = string.Empty;
-            //using (var reader = new StreamReader(file.OpenReadStream()))
-            //{
-            //    rawContent = reader.ReadToEnd();
-            //}
-
-            //string content;
-            //try
-            //{
-            //    var aux = rawContent.Split(new[] { "<?xml" }, StringSplitOptions.None);
-            //    aux[1] = "<?xml" + aux[1];
-            //    var clean = aux[1].Split(new[] { "------" }, StringSplitOptions.None);
-            //    content = clean[0];
-            //}
-            //catch (Exception e)
-            //{
-            //    return false;
-            //}
-
-            //var xlist = new ExportableList();
-            //try
-            //{
-            //    if (content != "")
-            //        xlist = (ExportableList)XMLManagement.XMLtoObject(content, typeof(ExportableList));
-            //}
-            //catch (Exception e)
-            //{
-            //    return false;
-            //}
-
-            //if (xlist == null) return false;
-
-            //foreach (Attendant user in xlist.Members)
-            //{
-            //    try
-            //    {
-            //        if (ExistsAttendant(user.Email) == null)
-            //        {
-            //            var added = _attendantsLogic.SaveAttendant(user);
-            //            if (added)
-            //            {
-            //                return true;
-            //            }
-            //        }
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        throw e;
-            //    }
-            //}
-            //return true;
         }
 
         public Attendant ExistsAttendant(string email)
