@@ -225,16 +225,16 @@ namespace GestorEventos.BLL
 
         public IEnumerable<Participant> GetAssistants(int eventId)
         {
-            IEnumerable<Participant> assistants = new List<Participant>();
+            IList<Participant> assistants = new List<Participant>();
             var _event = GetEvent(eventId);
             var availableAssistants = _participantRepository.List(p => p.EventId == eventId && p.HasAssisted);
 
             foreach (var assistant in availableAssistants)
             {
                 var percentage = _event.Schedules.Count / assistant.Assistances;
-                if (percentage >= _event.)
+                if (percentage >= _event.AttendancePercentage)
                 {
-
+                    assistants.Add(assistant);
                 }
             }
 
