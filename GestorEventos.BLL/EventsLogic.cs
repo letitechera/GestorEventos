@@ -135,7 +135,8 @@ namespace GestorEventos.BLL
 
                 if (existant == null)
                 {
-                    participant.AttendantId = _attendantsRepository.Add(existant);
+                    var newAttendant = new Attendant(participant);
+                    participant.AttendantId = _attendantsRepository.Add(newAttendant);
                 }
                 else
                 {

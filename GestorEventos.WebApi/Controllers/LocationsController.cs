@@ -62,7 +62,7 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [HttpDelete("DeleteLocation/{id}")]
+        [HttpDelete("DeleteLocation/{locationId}")]
         public IActionResult DeleteLocation(int locationId)
         {
             if (_locationsLogic.DeleteLocation(locationId))

@@ -15,7 +15,7 @@ namespace GestorEventos.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.2.1-servicing-10028")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -165,6 +165,8 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CellPhone");
+
                     b.Property<string>("CreatedById");
 
                     b.Property<string>("CreatedByName");
@@ -182,6 +184,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<string>("ModifiedByName");
 
                     b.Property<DateTime?>("ModifiedDate");
+
+                    b.Property<string>("Phone");
 
                     b.HasKey("Id");
 
@@ -288,6 +292,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float?>("AttendancePercentage");
 
                     b.Property<bool?>("Canceled");
 

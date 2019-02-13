@@ -6,6 +6,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using GestorEventos.Models.Entities;
+using System.IO;
+using OfficeOpenXml;
+using System.Linq;
 
 namespace GestorEventos.BLL
 {
@@ -13,11 +16,13 @@ namespace GestorEventos.BLL
     {
         private readonly IConfiguration Configuration;
         private readonly IEventsLogic _eventsLogic;
+        private readonly IAttendantsLogic _attendantsLogic;
 
-        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic)
+        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic)
         {
             Configuration = configuration;
             _eventsLogic = eventsLogic;
+            _attendantsLogic = attendantsLogic;
         }
 
         public async Task<string> LoadEventImage(int eventId, IFormFile file)
@@ -54,12 +59,69 @@ namespace GestorEventos.BLL
             }
             else
             {
-                // Otherwise, let the user know that they need to define the environment variable.
-                //"A connection string has not been defined in the system environment variables. " +
-                //"Add a environment variable named 'storageconnectionstring' with your storage " +
-                //"connection string as a value."
                 return "";
             }
+        }
+
+        public bool ImportAttendantsFromXml(IFormFile file)
+        {
+
+            Stream stream = file.OpenReadStream();
+
+            var excel = new ExcelPackage(stream);
+            var workbook = excel.Workbook;
+
+            var sheet = excel.Workbook.Worksheets.First();
+            int colCount = sheet.Dimension.End.Column;  //get Column Count
+            int rowCount = sheet.Dimension.End.Row;     //get row count
+
+            for (int row = 2; row <= rowCount; row++)
+            {
+                var newAttendant = new Attendant();
+                for (int col = 1; col <= colCount; col++)
+                {
+                    var header = sheet.Cells[1, col].Value.ToString().Trim();
+                    var cellRaw = sheet.Cells[row, col].Value;
+                    var cell = "";
+
+                    if (header == "Email" && cellRaw == null) { return false; }
+
+                    if (cellRaw == null) { continue; }
+
+                    cell = cellRaw.ToString().Trim();
+
+                    switch (header)
+                    {
+                        case "Nombre":
+                            newAttendant.FirstName = cell;
+                            break;
+                        case "Apellido":
+                            newAttendant.LastName = cell;
+                            break;
+                        case "Email":
+                            newAttendant.Email = cell;
+                            break;
+                        case "Telefono":
+                            newAttendant.Phone = cell;
+                            break;
+                        case "Celular":
+                            newAttendant.CellPhone = cell;
+                            break;
+                        case null:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                _attendantsLogic.SaveAttendant(newAttendant);
+            }
+
+            return true;
+        }
+
+        public Attendant ExistsAttendant(string email)
+        {
+            return _attendantsLogic.ExistsAttendant(email);
         }
     }
 }
