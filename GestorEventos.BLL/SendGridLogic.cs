@@ -18,15 +18,17 @@ namespace GestorEventos.BLL
         readonly IConfiguration _configuration;
         readonly IRepository<Attendant> _attendantsRepository;
         readonly IRepository<Event> _eventsRepository;
+        readonly IRepository<Participant> _participantsRepository;
         private readonly SendGridClient _client;
         private readonly SendGridOptions _options;
         private readonly EmailAddress _from;
 
-        public SendGridLogic(IConfiguration configuration, IRepository<Attendant> attendantsRepository,
+        public SendGridLogic(IConfiguration configuration, IRepository<Attendant> attendantsRepository, IRepository<Participant> participantsRepository,
             IRepository<Event> eventsRepository)
         {
             _attendantsRepository = attendantsRepository;
             _eventsRepository = eventsRepository;
+            _participantsRepository = participantsRepository;
             _configuration = configuration;
 
             _options = new SendGridOptions();
@@ -68,6 +70,20 @@ namespace GestorEventos.BLL
 
         #region Events Mailing
 
+        public async Task SendCancelationEmail(int eventId)
+        {
+            var participants = _participantsRepository.List(p => p.EventId == eventId);
+            var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
+
+            foreach (var item in participants)
+            {
+                var recipient = new EmailAddress(item.Email, item.FirstName + " " + item.LastName);
+                var templateId = _options.TemplateEventCampaign;
+                var dynamicTemplateData = new CampaignEmailData(item.FirstName + " " + item.LastName, linkUrl);
+
+                await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
+            }
+        }
 
         #endregion
 
@@ -88,7 +104,6 @@ namespace GestorEventos.BLL
 
         public async Task SendCampaignEmail(int eventId)
         {
-            var _event = _eventsRepository.FindById(eventId);
             var attendants = _attendantsRepository.List();
             var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
 
