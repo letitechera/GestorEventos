@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.Entities;
 using GestorEventos.Models.WebApiModels;
@@ -95,9 +94,9 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("CancelEvent")]
+        [Route("CancelEvent/{eventId}")]
         [HttpPost]
-        public IActionResult CancelEvent([FromBody]int eventId)
+        public IActionResult CancelEvent(int eventId)
         {
             if (_eventsLogic.CancelEvent(eventId))
             {
@@ -106,11 +105,11 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("RegisterToEvent/{eventId}")]
+        [Route("RegisterToEvent")]
         [HttpPost]
-        public IActionResult RegisterToEvent(int eventId, [FromBody]Attendant attendant)
+        public IActionResult RegisterToEvent([FromBody] Participant participant)
         {
-            var qrCode = _eventsLogic.RegisterToEvent(eventId, attendant);
+            var qrCode = _eventsLogic.RegisterToEvent(participant);
             if (qrCode != null)
             {
                 return Ok(qrCode);
@@ -152,6 +151,21 @@ namespace GestorEventos.WebApi.Controllers
         {
             var result = _eventsLogic.Accredit(participantId);
             return Ok(result);
+        }
+
+        [Route("SendCampaign/{eventId}")]
+        [HttpGet]
+        public IActionResult SendCampaign(int eventId)
+        {
+            try{
+                _sendGridLogic.SendCampaignEmail(eventId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
         }
 
         [Route("{eventId}/participants")]

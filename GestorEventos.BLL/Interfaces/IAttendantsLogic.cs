@@ -1,6 +1,7 @@
 ﻿using GestorEventos.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace GestorEventos.BLL.Interfaces
@@ -14,5 +15,7 @@ namespace GestorEventos.BLL.Interfaces
         IEnumerable<Attendant> GetAttendants();
 
         Attendant GetAttendant(int attendantId);
+
+        Attendant ExistsAttendant(string email);
     }
 }

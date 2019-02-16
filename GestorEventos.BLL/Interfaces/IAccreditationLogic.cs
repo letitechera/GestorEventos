@@ -2,6 +2,6 @@
 {
     public interface IAccreditationLogic
     {
-        byte[] GenerateQRCode(int registrationID);
+        byte[] GenerateQRCode(int participantId);
     }
 }

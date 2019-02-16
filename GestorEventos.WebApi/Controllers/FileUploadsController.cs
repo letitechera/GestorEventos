@@ -28,11 +28,39 @@ namespace GestorEventos.WebApi.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-
                     var newFile = await _filesLogic.LoadEventImage(eventId, file);
 
                     return Ok(new { newFile });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPost("import/xml")]
+        public IActionResult ImportAttendantsByXml()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    var uploaded = _filesLogic.ImportAttendantsFromXml(file);
+
+                    if (uploaded)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NoContent();
+                    }
                 }
                 else
                 {

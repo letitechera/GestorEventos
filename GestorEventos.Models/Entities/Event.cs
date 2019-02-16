@@ -16,6 +16,7 @@ namespace GestorEventos.Models.Entities
         public int LocationId { get; set; }
         public int EventTopicId { get; set; }
         public bool? Canceled { get; set; }
+        public float? AttendancePercentage { get; set; }
 
         public virtual Location Location { get; set; }
         public virtual EventTopic EventTopic { get; set; }

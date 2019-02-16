@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="4.5.3.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.0" />
     <PackageReference Include="QRCoder" Version="1.3.5" />
     <PackageReference Include="Sendgrid" Version="9.10.0" />
@@ -12,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GestorEventos.Core\GestorEventos.Core.csproj" />
     <ProjectReference Include="..\GestorEventos.DAL\GestorEventos.DAL.csproj" />
   </ItemGroup>
 

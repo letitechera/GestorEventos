@@ -17,6 +17,8 @@ namespace GestorEventos.Models.WebApiModels
         public DateTime EndDate { get; set; }
         public string Topic { get; set; }
         public string CreatedById { get; set; }
+        public float? Percentage { get; set; }
+        public bool? Canceled { get; set; }
 
         public EventUI(Event _event)
         {
@@ -32,6 +34,8 @@ namespace GestorEventos.Models.WebApiModels
             EndDate = _event.EndDate;
             Topic = _event.EventTopic.Name;
             CreatedById = _event.CreatedById;
+            Percentage = _event.AttendancePercentage;
+            Canceled = _event.Canceled;
         }
     }
 }
