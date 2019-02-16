@@ -94,9 +94,9 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("CancelEvent")]
+        [Route("CancelEvent/{eventId}")]
         [HttpPost]
-        public IActionResult CancelEvent([FromBody]int eventId)
+        public IActionResult CancelEvent(int eventId)
         {
             if (_eventsLogic.CancelEvent(eventId))
             {

@@ -196,13 +196,12 @@ namespace GestorEventos.BLL
         {
             try
             {
-                var canceled = GetEvent(eventId);
-                canceled.Canceled = true;
+                var _event = GetEvent(eventId);
+                _event.Canceled = true;
 
-                SaveEvent(canceled, true);
+                SaveEvent(_event, true);
 
-                //TODO: 
-                //_emailsLogic.SendCancelationEmails(eventId);
+                _sendgridLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
@@ -210,7 +209,6 @@ namespace GestorEventos.BLL
             {
                 throw e;
             }
-
         }
 
         public void SendCampaign(int eventId)

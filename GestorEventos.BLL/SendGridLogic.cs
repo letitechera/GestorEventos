@@ -70,16 +70,17 @@ namespace GestorEventos.BLL
 
         #region Events Mailing
 
-        public async Task SendCancelationEmail(int eventId)
+        public async Task SendCancelationEmails(int eventId)
         {
+            var _event = _eventsRepository.FindById(eventId);
             var participants = _participantsRepository.List(p => p.EventId == eventId);
             var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
 
             foreach (var item in participants)
             {
                 var recipient = new EmailAddress(item.Email, item.FirstName + " " + item.LastName);
-                var templateId = _options.TemplateEventCampaign;
-                var dynamicTemplateData = new CampaignEmailData(item.FirstName + " " + item.LastName, linkUrl);
+                var templateId = _options.TemplateEventCancelation;
+                var dynamicTemplateData = new CampaignEmailData(item.FirstName + " " + item.LastName, linkUrl, _event.Name);
 
                 await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
             }
@@ -104,6 +105,7 @@ namespace GestorEventos.BLL
 
         public async Task SendCampaignEmail(int eventId)
         {
+            var _event = _eventsRepository.FindById(eventId);
             var attendants = _attendantsRepository.List();
             var linkUrl = _configuration.GetValue<string>("SiteOptions:EventDetails") + eventId;
 
@@ -111,7 +113,7 @@ namespace GestorEventos.BLL
             {
                 var recipient = new EmailAddress(item.Email, item.FullName);
                 var templateId = _options.TemplateEventCampaign;
-                var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl);
+                var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl, _event.Name);
 
                 await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
             }
