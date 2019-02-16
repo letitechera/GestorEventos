@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="Certificates\" />
   </ItemGroup>
 
   <ProjectExtensions>

@@ -31,7 +31,8 @@ namespace GestorEventos.WebApi.Controllers
             // Create Certificate
             foreach (var participant in assistants)
             {
-                var path = string.Format(@"C:\Certificates\{0}_{1}.pdf", participant.Event.Name, participant.Attendant.FullName);
+                var folder = Directory.GetCurrentDirectory() + "/Certificates";
+                var path = string.Format("{0}\\{1}_{2}.pdf",folder ,participant.Event.Name, participant.Attendant.FullName);
                 var globalSettings = new GlobalSettings
                 {
                     ColorMode = ColorMode.Color,
