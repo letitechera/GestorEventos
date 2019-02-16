@@ -10,11 +10,15 @@ namespace GestorEventos.Models.SendGridHelpers
         [JsonProperty("eventName")]
         public string EventName { get; set; }
 
-        public CampaignEmailData(string recipName, string linkUrl, string eventName) : base()
+        [JsonProperty("eventInfo")]
+        public string EventInfo { get; set; }
+
+        public CampaignEmailData(string recipName, string linkUrl, string eventName, string eventInfo = null) : base()
         {
             RecipientName = recipName;
             LinkUrl = linkUrl;
             EventName = eventName;
+            EventInfo = eventInfo;
         }
     }
 }

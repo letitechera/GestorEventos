@@ -113,7 +113,7 @@ namespace GestorEventos.BLL
             {
                 var recipient = new EmailAddress(item.Email, item.FullName);
                 var templateId = _options.TemplateEventCampaign;
-                var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl, _event.Name);
+                var dynamicTemplateData = new CampaignEmailData(item.FullName, linkUrl, _event.Name, _event.Description);
 
                 await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
             }

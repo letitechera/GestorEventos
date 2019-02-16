@@ -157,8 +157,15 @@ namespace GestorEventos.WebApi.Controllers
         [HttpGet]
         public IActionResult SendCampaign(int eventId)
         {
-            var result = _sendGridLogic.SendCampaignEmail(eventId);
-            return Ok(result);
+            try{
+                _sendGridLogic.SendCampaignEmail(eventId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
         }
 
         [Route("{eventId}/participants")]
