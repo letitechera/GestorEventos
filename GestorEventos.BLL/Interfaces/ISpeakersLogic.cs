@@ -15,7 +15,5 @@ namespace GestorEventos.BLL.Interfaces
         IEnumerable<Speaker> GetSpeakers(int activityId);
 
         Speaker GetSpeaker(int speakerId);
-
-        bool SaveImage(int speakerId, FileInfo image);
     }
 }

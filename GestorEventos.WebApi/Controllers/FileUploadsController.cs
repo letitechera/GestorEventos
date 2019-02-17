@@ -43,6 +43,30 @@ namespace GestorEventos.WebApi.Controllers
             }
         }
 
+        [Route("speakerimage")]
+        [HttpPost]
+        public async Task<IActionResult> PostSpeakerImage()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    var newFile = await _filesLogic.LoadSpeakerImage(file);
+
+                    return Ok(new { newFile });
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("import/xml")]
         public IActionResult ImportAttendantsByXml()
         {
