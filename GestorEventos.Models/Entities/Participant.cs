@@ -11,6 +11,9 @@
         public string CellPhone { get; set; }
         public string QRCode { get; set; }
 
+        public bool HasAssisted { get; set; }
+        public int Assistances { get; set; }
+
         public virtual Attendant Attendant { get; set; }
         public virtual Event Event { get; set; }
     }

@@ -431,6 +431,8 @@ namespace GestorEventos.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Assistances");
+
                     b.Property<int>("AttendantId");
 
                     b.Property<string>("CellPhone");
@@ -446,6 +448,8 @@ namespace GestorEventos.DAL.Migrations
                     b.Property<int>("EventId");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<bool>("HasAssisted");
 
                     b.Property<string>("LastName");
 

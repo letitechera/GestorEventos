@@ -221,6 +221,24 @@ namespace GestorEventos.BLL
             return _participantRepository.List(p => p.EventId == eventId);
         }
 
+        public IEnumerable<Participant> GetAssistants(int eventId)
+        {
+            IList<Participant> assistants = new List<Participant>();
+            var _event = GetEvent(eventId);
+            var availableAssistants = _participantRepository.List(p => p.EventId == eventId && p.HasAssisted);
+
+            foreach (var assistant in availableAssistants)
+            {
+                var percentage = _event.Schedules.Count / assistant.Assistances;
+                if (percentage >= _event.AttendancePercentage)
+                {
+                    assistants.Add(assistant);
+                }
+            }
+
+            return assistants;
+        }
+
         #endregion
 
         #region Event Topics
@@ -298,6 +316,9 @@ namespace GestorEventos.BLL
         public Participant Accredit(int participantId)
         {
             var participant = GetParticipant(participantId);
+            participant.HasAssisted = true;
+            participant.Assistances++;
+            _participantRepository.Update(participant);
             return participant;
         }
 
