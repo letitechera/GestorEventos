@@ -16,12 +16,14 @@ namespace GestorEventos.BLL
     {
         private readonly IConfiguration Configuration;
         private readonly IEventsLogic _eventsLogic;
+        private readonly ISpeakersLogic _speakerLogic;
         private readonly IAttendantsLogic _attendantsLogic;
 
-        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic)
+        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic, ISpeakersLogic speakerLogic)
         {
             Configuration = configuration;
             _eventsLogic = eventsLogic;
+            _speakerLogic = speakerLogic;
             _attendantsLogic = attendantsLogic;
         }
 
@@ -56,6 +58,37 @@ namespace GestorEventos.BLL
                 }
 
                 return $"{basePath}/eventimages/" + newName;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        public async Task<string> LoadSpeakerImage(IFormFile file)
+        {
+            var conectionString = Configuration.GetValue<string>("StorageConfig:StringConnection");
+            var basePath = Configuration.GetValue<string>("StorageConfig:BaseStoragePath");
+
+            if (CloudStorageAccount.TryParse(conectionString, out var storageAccount))
+            {
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("speakerimages");
+                await container.CreateIfNotExistsAsync();
+
+                BlobContainerPermissions permissions = new BlobContainerPermissions
+                {
+                    PublicAccess = BlobContainerPublicAccessType.Blob
+                };
+                await container.SetPermissionsAsync(permissions);
+
+                var guid = Guid.NewGuid();
+
+                var newName = $"speaker_{guid}.jpg";
+                var newBlob = container.GetBlockBlobReference(newName);
+                await newBlob.UploadFromStreamAsync(file.OpenReadStream());
+
+                return $"{basePath}/speakerimages/" + newName;
             }
             else
             {
