@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using GestorEventos.BLL.Interfaces;
@@ -26,46 +27,53 @@ namespace GestorEventos.WebApi.Controllers
         [HttpGet]
         public IActionResult SendCertificates(int eventId)
         {
-            var assistants = _eventsLogic.GetAssistants(eventId);
-            
-            // Create Certificate
-            foreach (var participant in assistants)
-            {
-                var folder = Directory.GetCurrentDirectory() + "/Certificates";
-                var path = string.Format("{0}\\{1}_{2}.pdf",folder ,participant.Event.Name, participant.Attendant.FullName);
-                var globalSettings = new GlobalSettings
+            try{
+                var assistants = _eventsLogic.GetAssistants(eventId);
+
+                // Create Certificate
+                foreach (var participant in assistants)
                 {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Margins = new MarginSettings { Top = 10 },
-                    DocumentTitle = "Certificate",
-                    Out = path
-                };
+                    var folder = Directory.GetCurrentDirectory() + "/Certificates";
+                    var path = string.Format("{0}\\{1}_{2}.pdf", folder, participant.Event.Name, participant.Attendant.FullName);
+                    var globalSettings = new GlobalSettings
+                    {
+                        ColorMode = ColorMode.Color,
+                        Orientation = Orientation.Portrait,
+                        PaperSize = PaperKind.A4,
+                        Margins = new MarginSettings { Top = 10 },
+                        DocumentTitle = "Certificate",
+                        Out = path
+                    };
 
-                var objectSettings = new ObjectSettings
-                {
-                    PagesCount = true,
-                    HtmlContent = TemplateGenerator.GetHTMLString(participant),
-                    WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
-                    HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-                    FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
-                };
+                    var objectSettings = new ObjectSettings
+                    {
+                        PagesCount = true,
+                        HtmlContent = TemplateGenerator.GetHTMLString(participant),
+                        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "styles.css") },
+                        HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                        FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
+                    };
 
-                var pdf = new HtmlToPdfDocument()
-                {
-                    GlobalSettings = globalSettings,
-                    Objects = { objectSettings }
-                };
+                    var pdf = new HtmlToPdfDocument()
+                    {
+                        GlobalSettings = globalSettings,
+                        Objects = { objectSettings }
+                    };
 
-                _converter.Convert(pdf);
+                    _converter.Convert(pdf);
 
-                // Send Certificate
-                var doc = System.IO.File.ReadAllBytes(path);
-                _sendGridLogic.SendCertificateEmail(participant.Attendant.Email, doc);
+                    // Send Certificate
+                    var doc = System.IO.File.ReadAllBytes(path);
+                    _sendGridLogic.SendCertificateEmail(participant.Attendant.Email, doc);
+                }
+
+                return Ok("Successfully sent certificate.");
             }
-
-            return Ok("Successfully sent certificate.");
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+            
         }
     }
 }
