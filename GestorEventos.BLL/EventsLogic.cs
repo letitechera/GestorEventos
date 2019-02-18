@@ -227,6 +227,11 @@ namespace GestorEventos.BLL
             var _event = GetEvent(eventId);
             var availableAssistants = _participantRepository.List(p => p.EventId == eventId && p.HasAssisted);
 
+            if (_event.AttendancePercentage == null || _event.AttendancePercentage <= 0)
+            {
+                return availableAssistants;
+            }
+
             foreach (var assistant in availableAssistants)
             {
                 if (assistant.Assistances <= 0)
