@@ -43,7 +43,7 @@ namespace GestorEventos.WebApi.Utility
                 </div>
               </div>
             </div>
-                ", participant.Attendant.FullName, participant.Event.Name, participant.Event.Image, participant.Event.StartDate.ToShortDateString(), participant.Event.CreatedByName);
+                ", participant.Attendant.FullName, participant.Event.Name, participant.Event.SmallImage, participant.Event.StartDate.ToShortDateString(), participant.Event.CreatedByName);
             return sb.ToString();
         }
     }
