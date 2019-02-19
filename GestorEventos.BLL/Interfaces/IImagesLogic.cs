@@ -11,6 +11,8 @@ namespace GestorEventos.BLL.Interfaces
     {
         Task<string> LoadEventImage(int eventId, IFormFile file);
 
+        Task<string> LoadSpeakerImage(IFormFile file);
+
         bool ImportAttendantsFromXml(IFormFile file);
     }
 }

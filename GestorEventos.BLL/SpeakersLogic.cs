@@ -11,12 +11,10 @@ namespace GestorEventos.BLL
     public class SpeakersLogic : ISpeakersLogic
     {
         private readonly IRepository<Speaker> _speakersRepository;
-        private readonly IFilesLogic _imagesLogic;
 
-        public SpeakersLogic(IRepository<Speaker> speakersRepository, IFilesLogic imagesLogic)
+        public SpeakersLogic(IRepository<Speaker> speakersRepository)
         {
             _speakersRepository = speakersRepository;
-            _imagesLogic = imagesLogic;
         }
 
         #region Speakers
@@ -75,25 +73,6 @@ namespace GestorEventos.BLL
             catch (Exception e)
             {
                 throw e;
-            }
-        }
-
-        public bool SaveImage(int speakerId, FileInfo image)
-        {
-            try
-            {
-                //var speakersBlob = "";
-                //var imageUrl = _imagesLogic.LoadImage(image, speakersBlob);
-
-                //var speaker = _speakersRepository.FindById(speakerId);
-                //speaker.Image = imageUrl;
-                //_speakersRepository.Update(speaker);
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
             }
         }
 

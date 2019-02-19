@@ -14,5 +14,6 @@
         public string TemplateParticipantCode { get; set; }
         public string TemplateEventCampaign { get; set; }
         public string TemplateCertificate { get; set; }
+        public string TemplateEventCancelation { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace GestorEventos.Models.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Image { get; set; }
+        public string SmallImage { get; set; }
         public string Description { get; set; }
         public int LocationId { get; set; }
         public int EventTopicId { get; set; }

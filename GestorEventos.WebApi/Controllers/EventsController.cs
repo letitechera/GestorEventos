@@ -94,9 +94,9 @@ namespace GestorEventos.WebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        [Route("CancelEvent")]
+        [Route("CancelEvent/{eventId}")]
         [HttpPost]
-        public IActionResult CancelEvent([FromBody]int eventId)
+        public IActionResult CancelEvent(int eventId)
         {
             if (_eventsLogic.CancelEvent(eventId))
             {
@@ -157,8 +157,15 @@ namespace GestorEventos.WebApi.Controllers
         [HttpGet]
         public IActionResult SendCampaign(int eventId)
         {
-            var result = _sendGridLogic.SendCampaignEmail(eventId);
-            return Ok(result);
+            try{
+                _sendGridLogic.SendCampaignEmail(eventId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
         }
 
         [Route("{eventId}/participants")]

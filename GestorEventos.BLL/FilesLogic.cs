@@ -9,6 +9,7 @@ using GestorEventos.Models.Entities;
 using System.IO;
 using OfficeOpenXml;
 using System.Linq;
+using ImageMagick;
 
 namespace GestorEventos.BLL
 {
@@ -16,16 +17,102 @@ namespace GestorEventos.BLL
     {
         private readonly IConfiguration Configuration;
         private readonly IEventsLogic _eventsLogic;
+        private readonly ISpeakersLogic _speakerLogic;
         private readonly IAttendantsLogic _attendantsLogic;
 
-        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic)
+        public FilesLogic(IConfiguration configuration, IEventsLogic eventsLogic, IAttendantsLogic attendantsLogic, ISpeakersLogic speakerLogic)
         {
             Configuration = configuration;
             _eventsLogic = eventsLogic;
+            _speakerLogic = speakerLogic;
             _attendantsLogic = attendantsLogic;
         }
 
         public async Task<string> LoadEventImage(int eventId, IFormFile file)
+        {
+            try
+            {
+                var conectionString = Configuration.GetValue<string>("StorageConfig:StringConnection");
+                var basePath = Configuration.GetValue<string>("StorageConfig:BaseStoragePath");
+
+                var smallUrl = "";
+
+                if (CloudStorageAccount.TryParse(conectionString, out var storageAccount))
+                {
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference("eventimages");
+                    await container.CreateIfNotExistsAsync();
+
+                    BlobContainerPermissions permissions = new BlobContainerPermissions
+                    {
+                        PublicAccess = BlobContainerPublicAccessType.Blob
+                    };
+                    await container.SetPermissionsAsync(permissions);
+
+                    var guid = Guid.NewGuid();
+
+                    var newName = $"event_{eventId}_{guid}.jpg";
+                    var newBlob = container.GetBlockBlobReference(newName);
+
+                    await newBlob.UploadFromStreamAsync(file.OpenReadStream());
+
+                    // Save Resized Small Image:
+
+                    CloudBlobClient rblobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer rcontainer = blobClient.GetContainerReference("eventresizedimages");
+                    await rcontainer.CreateIfNotExistsAsync();
+                    await rcontainer.SetPermissionsAsync(permissions);
+                    var resizeBlob = rcontainer.GetBlockBlobReference(newName);
+
+                    byte[] contents = new byte[file.Length];
+
+                    using (var imageStream = file.OpenReadStream())
+                    {
+                        for (int i = 0; i < file.Length; i++)
+                        {
+                            contents[i] = (byte)imageStream.ReadByte();
+                        }
+                    }
+
+                    // Resize
+                    using (var image = new MagickImage(contents))
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            image.Format = MagickFormat.Jpg;
+                            image.Resize(300, 0);
+                            image.Write(memoryStream);
+                            memoryStream.Position = 0;
+
+                            await resizeBlob.UploadFromStreamAsync(memoryStream);
+                            smallUrl = resizeBlob.StorageUri.PrimaryUri.ToString();
+                        }
+                    }
+
+                    // Save if edit:
+
+                    if (eventId != 0)
+                    {
+                        Event _event = _eventsLogic.GetEvent(eventId);
+                        _event.Image = newBlob.StorageUri.PrimaryUri.ToString();
+                        _event.SmallImage = smallUrl;
+                        _eventsLogic.SaveEvent(_event, true);
+                    }
+
+                    return newBlob.StorageUri.PrimaryUri.ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public async Task<string> LoadSpeakerImage(IFormFile file)
         {
             var conectionString = Configuration.GetValue<string>("StorageConfig:StringConnection");
             var basePath = Configuration.GetValue<string>("StorageConfig:BaseStoragePath");
@@ -33,7 +120,7 @@ namespace GestorEventos.BLL
             if (CloudStorageAccount.TryParse(conectionString, out var storageAccount))
             {
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("eventimages");
+                CloudBlobContainer container = blobClient.GetContainerReference("speakerimages");
                 await container.CreateIfNotExistsAsync();
 
                 BlobContainerPermissions permissions = new BlobContainerPermissions
@@ -44,18 +131,11 @@ namespace GestorEventos.BLL
 
                 var guid = Guid.NewGuid();
 
-                var newName = $"event_{eventId}_{guid}.jpg";
+                var newName = $"speaker_{guid}.jpg";
                 var newBlob = container.GetBlockBlobReference(newName);
                 await newBlob.UploadFromStreamAsync(file.OpenReadStream());
 
-                if (eventId != 0)
-                {
-                    Event _event = _eventsLogic.GetEvent(eventId);
-                    _event.Image = $"{basePath}/eventimages/" + newName;
-                    _eventsLogic.SaveEvent(_event, true);
-                }
-
-                return $"{basePath}/eventimages/" + newName;
+                return $"{basePath}/speakerimages/" + newName;
             }
             else
             {
@@ -122,6 +202,74 @@ namespace GestorEventos.BLL
         public Attendant ExistsAttendant(string email)
         {
             return _attendantsLogic.ExistsAttendant(email);
+        }
+
+        public async Task<string> ConvertImage(byte[] data, string newName)
+        {
+            try
+            {
+                var conectionString = Configuration.GetValue<string>("StorageConfig:StringConnection");
+                var basePath = Configuration.GetValue<string>("StorageConfig:BaseStoragePath");
+
+                if (CloudStorageAccount.TryParse(conectionString, out var storageAccount))
+                {
+                    CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                    CloudBlobContainer container = blobClient.GetContainerReference("eventresizedimages");
+                    await container.CreateIfNotExistsAsync();
+
+                    BlobContainerPermissions permissions = new BlobContainerPermissions
+                    {
+                        PublicAccess = BlobContainerPublicAccessType.Blob
+                    };
+                    await container.SetPermissionsAsync(permissions);
+
+                    var resizeBlob = container.GetBlockBlobReference(newName);
+
+                    //using (var memStream = new MemoryStream())
+                    //{
+                    //    file.CopyTo(memStream);
+                    //    memStream.Seek(0, SeekOrigin.Begin);
+                    //    using (MagickImage image = new MagickImage(memStream))
+                    //    {
+                    //        image.Resize(300, 0);
+                    //        image.Write(memStream);
+                    //        await resizeBlob.UploadFromStreamAsync(memStream);
+                    //    }
+                    //}
+
+                    // Create our settings
+                    var settings = new MagickReadSettings
+                    {
+                        Width = 300,
+                        Format = MagickFormat.Jpg
+                    };
+
+                    // Create our image
+                    using (var image = new MagickImage(data, settings))
+                    {
+                        // Create a new memory stream
+                        using (var memoryStream = new MemoryStream())
+                        {
+
+                            // Set to a png
+                            image.Format = MagickFormat.Png;
+                            image.Write(memoryStream);
+                            memoryStream.Position = 0;
+
+                            // Upload to azure
+                            await resizeBlob.UploadFromStreamAsync(memoryStream);
+
+                            // Return the blobs url
+                            return resizeBlob.StorageUri.PrimaryUri.ToString();
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }

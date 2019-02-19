@@ -138,20 +138,6 @@ namespace GestorEventos.BLL
             return true;
         }
 
-        //private Uri GenerateTokenUrl(string actionUrl, string userId, string resetToken)
-        //{
-        //    Uri callbackUrl = new Uri(actionUrl);
-
-        //    var paramList = new List<string>();
-        //    paramList.AddRange(tokens.Select(HttpUtility.UrlEncode));
-
-        //    var confirmUrl = string.Format(oauthLink, paramList.ToArray());
-
-        //    callbackUrl = new Uri(callbackUrl, confirmUrl);
-
-        //    return callbackUrl;
-        //}
-
         public async Task<bool> ExistsUser(string email)
         {
             return await _userManager.FindByEmailAsync(email) != null;

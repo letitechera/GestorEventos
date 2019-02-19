@@ -196,13 +196,12 @@ namespace GestorEventos.BLL
         {
             try
             {
-                var canceled = GetEvent(eventId);
-                canceled.Canceled = true;
+                var _event = GetEvent(eventId);
+                _event.Canceled = true;
 
-                SaveEvent(canceled, true);
+                SaveEvent(_event, true);
 
-                //TODO: 
-                //_emailsLogic.SendCancelationEmails(eventId);
+                _sendgridLogic.SendCancelationEmails(eventId);
 
                 return true;
             }
@@ -210,7 +209,6 @@ namespace GestorEventos.BLL
             {
                 throw e;
             }
-
         }
 
         public void SendCampaign(int eventId)
@@ -229,9 +227,19 @@ namespace GestorEventos.BLL
             var _event = GetEvent(eventId);
             var availableAssistants = _participantRepository.List(p => p.EventId == eventId && p.HasAssisted);
 
+            if (_event.AttendancePercentage == null || _event.AttendancePercentage <= 0)
+            {
+                return availableAssistants;
+            }
+
             foreach (var assistant in availableAssistants)
             {
                 float percentage = (assistant.Assistances / _event.Schedules.Count) * 100;
+                if (assistant.Assistances <= 0)
+                {
+                    continue;
+                }
+                var percentage = (assistant.Assistances * 100) / _event.Schedules.Count;
                 if (percentage >= _event.AttendancePercentage)
                 {
                     assistants.Add(assistant);

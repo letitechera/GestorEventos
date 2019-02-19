@@ -11,6 +11,7 @@ namespace GestorEventos.Models.WebApiModels
         public string Name { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
+        public string SmallImage { get; set; }
         public string Location { get; set; }
         public string Address { get; set; }
         public DateTime StartDate { get; set; }
@@ -18,6 +19,7 @@ namespace GestorEventos.Models.WebApiModels
         public string Topic { get; set; }
         public string CreatedById { get; set; }
         public float? Percentage { get; set; }
+        public bool? Canceled { get; set; }
 
         public EventUI(Event _event)
         {
@@ -25,6 +27,7 @@ namespace GestorEventos.Models.WebApiModels
             Name = _event.Name;
             Description = _event.Description;
             Image = _event.Image;
+            SmallImage = _event.SmallImage;
             Location = _event.Location.Name ?? "N/A";
             Address = _event.Location.Address1 + 
                 (string.IsNullOrEmpty(_event.Location.Address2) 
@@ -34,6 +37,7 @@ namespace GestorEventos.Models.WebApiModels
             Topic = _event.EventTopic.Name;
             CreatedById = _event.CreatedById;
             Percentage = _event.AttendancePercentage;
+            Canceled = _event.Canceled;
         }
     }
 }

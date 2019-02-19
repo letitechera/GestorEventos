@@ -20,23 +20,30 @@ namespace GestorEventos.WebApi.Utility
         {
             var sb = new StringBuilder();
             sb.AppendFormat(@"
-
-<div style='width: 800px; height: 800px; padding: 20px; text - align:center; border: 10px solid #787878'>
-<div style= 'width:750px; height:750px; padding:20px; text-align:center; border: 5px solid #787878'>
-            <span style= 'font-size:50px; font-weight:bold' > Certificate of Participation</span>
-                <br><br>  
-                <span style = 'font-size:25px'><i> This is to certify that </i></span>
-                       <br><br>
-                       <span style = 'font-size:30px'><b>{0}</b></span><br/><br/>                
-                             <span style = 'font-size:25px'><i> has participanted on the event</i></span><br/><br/>
-                                    <span style= 'font-size:30px'>{1}</span><br/><br/>
-                <img src='{2}' style='width:300px'></br></br>                              
-                <span style= 'font-size:25px'>{3}</span></br>
-                <span style= 'font-size:25px'><i> organized by</i></span></br>
-                <span style= 'font-size:30px'><b>{4}</b></span>
-    </div>
-    </div>
-    ", participant.Attendant.FullName, participant.Event.Name, participant.Event.Image, participant.Event.StartDate.ToShortDateString(), participant.Event.CreatedByName);
+            <style>
+                @import url('https://fonts.googleapis.com/css?family=Dancing+Script:400,700');
+                @import url('https://fonts.googleapis.com/css?family=Raleway');
+            </style>
+            <div class='c-container'>
+              <div class='c-body'>
+                <div class='c-title'> CERTIFICATE <span class='c-of'>OF</span> PARTICIPATION</div>
+                <div class='c-certify'>THIS IS TO CERTIFY THAT</div>
+                <div class='c-name'><span>{0}</span></div>
+                <div class='c-reason'>HAS PARTICIPATED IN</div>
+                <div class='c-event'>{1}</div>
+                <div class='c-footer'>
+                  <div class='c-info'>
+                    <div class='c-oby'>ORGANIZED BY</div>
+                    <div class='c-organizer'>{4}</div>
+                    <div class='c-date'>{3}</div>
+                  </div>
+                  <div class='c-img'>
+                    <img src='{2}' style='width:150px; height:120px'>
+                  </div>
+                </div>
+              </div>
+            </div>
+                ", participant.Attendant.FullName, participant.Event.Name, participant.Event.SmallImage, participant.Event.StartDate.ToShortDateString(), participant.Event.CreatedByName);
             return sb.ToString();
         }
     }

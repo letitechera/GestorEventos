@@ -321,6 +321,8 @@ namespace GestorEventos.DAL.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("SmallImage");
+
                     b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
