@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using GestorEventos.Models;
 using GestorEventos.Models.DTOs;
@@ -43,7 +44,10 @@ namespace GestorEventos.WebApi.Controllers
                 return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid username or password.", ModelState));
             }
 
-            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            var user = await _userManager.FindByEmailAsync(credentials.UserName);
+            var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, role, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
             return new OkObjectResult(jwt);
         }
 

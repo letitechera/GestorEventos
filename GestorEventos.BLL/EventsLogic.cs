@@ -234,6 +234,7 @@ namespace GestorEventos.BLL
 
             foreach (var assistant in availableAssistants)
             {
+                float percentage = (assistant.Assistances / _event.Schedules.Count) * 100;
                 if (assistant.Assistances <= 0)
                 {
                     continue;
