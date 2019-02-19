@@ -94,8 +94,7 @@ namespace GestorEventos.BLL
 
             if (user == null)
             {
-                // TODO: Fix
-                return null;
+                return new ResetPasswordResult(false);
             }
 
             try

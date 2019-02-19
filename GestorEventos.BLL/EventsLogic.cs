@@ -239,7 +239,7 @@ namespace GestorEventos.BLL
                 {
                     continue;
                 }
-                var percentage = (assistant.Assistances * 100) / _event.Schedules.Count;
+
                 if (percentage >= _event.AttendancePercentage)
                 {
                     assistants.Add(assistant);
