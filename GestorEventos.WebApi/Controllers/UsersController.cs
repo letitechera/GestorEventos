@@ -1,4 +1,5 @@
 ﻿using GestorEventos.BLL.Interfaces;
+using GestorEventos.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -27,12 +28,21 @@ namespace GestorEventos.WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> GetUsersToEnable()
+        [Route("roles")]
+        public async Task<IActionResult> GetRoles()
         {
-            var result = await _usersLogic.GetUsersToEnable();
+            var result = await _usersLogic.GetRoles();
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("assign-role")]
+        public async Task<IActionResult> AssignRole(UserRoleDTO userRole)
+        {
+            await _usersLogic.AssignRole(userRole.UserId, userRole.Role);
+
+            return Ok();
         }
 
         [HttpGet]
@@ -44,36 +54,6 @@ namespace GestorEventos.WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> EnableUser(string userId, string roleId)
-        {
-            var result = await _usersLogic.EnableUser(userId, roleId, string.Empty);
 
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> RejectUser(string userId)
-        {
-            var result = await _usersLogic.RejectUser(userId);
-
-            if (result)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
     }
 }
