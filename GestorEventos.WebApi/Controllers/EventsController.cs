@@ -109,12 +109,15 @@ namespace GestorEventos.WebApi.Controllers
         [HttpPost]
         public IActionResult RegisterToEvent([FromBody] Participant participant)
         {
-            var qrCode = _eventsLogic.RegisterToEvent(participant);
-            if (qrCode != null)
+            try
             {
+                var qrCode = _eventsLogic.RegisterToEvent(participant);
                 return Ok(qrCode);
             }
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [Route("CreateTopic/{name}")]
@@ -157,7 +160,8 @@ namespace GestorEventos.WebApi.Controllers
         [HttpGet]
         public IActionResult SendCampaign(int eventId)
         {
-            try{
+            try
+            {
                 _sendGridLogic.SendCampaignEmail(eventId);
                 return Ok();
             }

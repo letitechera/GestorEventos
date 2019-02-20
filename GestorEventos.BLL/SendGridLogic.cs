@@ -97,10 +97,8 @@ namespace GestorEventos.BLL
 
             var recipient = new EmailAddress(attendant.Email, attendant.FullName);
             var templateId = _options.TemplateParticipantCode;
-            var base64QR = Convert.ToBase64String(qrCode);
-            var dynamicTemplateData = new ParticipantEmailData(_event, attendant.FullName, base64QR);
 
-            return await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
+            return await SendQREmail(recipient.Email, qrCode, _event.Name);
         }
 
         public async Task SendCampaignEmail(int eventId)
@@ -117,6 +115,17 @@ namespace GestorEventos.BLL
 
                 await SendTemplateEmail(recipient, templateId, dynamicTemplateData);
             }
+        }
+
+        public async Task<Response> SendQREmail(string recipEmail, byte[] qrCode, string eventName = null)
+        {
+            var templateId = _options.TemplateParticipantCode;
+
+            var recipient = new EmailAddress(recipEmail);
+
+            string base64Code = Convert.ToBase64String(qrCode);
+
+            return await SendQRAttachmentEmail(recipient, templateId, base64Code, eventName);
         }
 
         #endregion
@@ -176,6 +185,26 @@ namespace GestorEventos.BLL
             msg.AddTos(recipients);
 
             msg.AddAttachment("certificate.pdf", certificate, "application/pdf", "attachment", "banner");
+            msg.TemplateId = templateId;
+
+            return await _client.SendEmailAsync(msg);
+        }
+
+        private async Task<Response> SendQRAttachmentEmail(EmailAddress recipient, string templateId, string qrimage, string eventName = null)
+        {
+            var msg = new SendGridMessage();
+
+            msg.SetFrom(_from);
+
+            var recipients = new List<EmailAddress> { recipient };
+
+            if (eventName != null)
+            {
+                var dynamicTemplateData = new AuthEmailData(eventName);
+                msg.SetTemplateData(dynamicTemplateData);
+            }
+            msg.AddTos(recipients);
+            msg.AddAttachment("qrCode.jpg", qrimage, "application/jpg", "attachment", "banner");
             msg.TemplateId = templateId;
 
             return await _client.SendEmailAsync(msg);

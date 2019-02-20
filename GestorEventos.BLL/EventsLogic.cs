@@ -151,19 +151,16 @@ namespace GestorEventos.BLL
                 {
                     // Save participant and get registration ID
                     _participantRepository.Add(participant);
-
-                    var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
-
-                    // Generate QR Code
-                    var qrCode = _accreditationLogic.GenerateQRCode(participantId);
-
-                    // Send Email with QR to Participant
-                    _sendgridLogic.SendQRCodeEmail(participant, qrCode);
-
-                    return qrCode;
                 }
 
-                return null;
+                var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
+                // Generate QR Code
+                var qrCode = _accreditationLogic.GenerateQRCode(participantId);
+
+                // Send Email with QR to Participant
+                _sendgridLogic.SendQRCodeEmail(participant, qrCode);
+
+                return qrCode;
             }
             catch (Exception e)
             {
