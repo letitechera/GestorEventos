@@ -13,6 +13,6 @@ namespace GestorEventos.BLL.Interfaces
         Task<Response> SendCertificateEmail(string recipEmail, byte[] certificate);
         Task SendCampaignEmail(int eventId);
         Task SendCancelationEmails(int eventId);
-        Task<Response> SendQREmail(string recipEmail, byte[] qrCode, string eventName = null)
+        Task<Response> SendQREmail(string recipEmail, byte[] qrCode, string eventName = null);
     }
 }

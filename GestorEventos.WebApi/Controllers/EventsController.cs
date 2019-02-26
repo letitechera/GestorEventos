@@ -152,8 +152,19 @@ namespace GestorEventos.WebApi.Controllers
         [HttpGet]
         public IActionResult Accredit(int participantId)
         {
-            var result = _eventsLogic.Accredit(participantId);
-            return Ok(result);
+            try
+            {
+                var result = _eventsLogic.Accredit(participantId);
+                if (result == null)
+                {
+                    return StatusCode(500);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
         }
 
         [Route("SendCampaign/{eventId}")]

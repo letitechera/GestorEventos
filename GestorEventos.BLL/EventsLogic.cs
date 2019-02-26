@@ -322,11 +322,18 @@ namespace GestorEventos.BLL
 
         public Participant Accredit(int participantId)
         {
-            var participant = GetParticipant(participantId);
-            participant.HasAssisted = true;
-            participant.Assistances++;
-            _participantRepository.Update(participant);
-            return participant;
+            try
+            {
+                var participant = GetParticipant(participantId);
+                participant.HasAssisted = true;
+                participant.Assistances++;
+                _participantRepository.Update(participant);
+                return participant;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public Participant GetParticipant(int participantId)
