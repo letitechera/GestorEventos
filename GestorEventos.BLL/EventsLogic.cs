@@ -151,19 +151,16 @@ namespace GestorEventos.BLL
                 {
                     // Save participant and get registration ID
                     _participantRepository.Add(participant);
-
-                    var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
-
-                    // Generate QR Code
-                    var qrCode = _accreditationLogic.GenerateQRCode(participantId);
-
-                    // Send Email with QR to Participant
-                    _sendgridLogic.SendQRCodeEmail(participant, qrCode);
-
-                    return qrCode;
                 }
 
-                return null;
+                var participantId = _participantRepository.List(p => p.EventId == participant.EventId && p.Email == participant.Email).FirstOrDefault().Id;
+                // Generate QR Code
+                var qrCode = _accreditationLogic.GenerateQRCode(participantId);
+
+                // Send Email with QR to Participant
+                _sendgridLogic.SendQRCodeEmail(participant, qrCode);
+
+                return qrCode;
             }
             catch (Exception e)
             {
@@ -219,6 +216,34 @@ namespace GestorEventos.BLL
         public IEnumerable<Participant> GetParticipants(int eventId)
         {
             return _participantRepository.List(p => p.EventId == eventId);
+        }
+
+        public IEnumerable<Participant> GetAssistants(int eventId)
+        {
+            IList<Participant> assistants = new List<Participant>();
+            var _event = GetEvent(eventId);
+            var availableAssistants = _participantRepository.List(p => p.EventId == eventId && p.HasAssisted);
+
+            if (_event.AttendancePercentage == null || _event.AttendancePercentage <= 0)
+            {
+                return availableAssistants;
+            }
+
+            foreach (var assistant in availableAssistants)
+            {
+                float percentage = (assistant.Assistances / _event.Schedules.Count) * 100;
+                if (assistant.Assistances <= 0)
+                {
+                    continue;
+                }
+
+                if (percentage >= _event.AttendancePercentage)
+                {
+                    assistants.Add(assistant);
+                }
+            }
+
+            return assistants;
         }
 
         #endregion
@@ -297,8 +322,18 @@ namespace GestorEventos.BLL
 
         public Participant Accredit(int participantId)
         {
-            var participant = GetParticipant(participantId);
-            return participant;
+            try
+            {
+                var participant = GetParticipant(participantId);
+                participant.HasAssisted = true;
+                participant.Assistances++;
+                _participantRepository.Update(participant);
+                return participant;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public Participant GetParticipant(int participantId)

@@ -67,8 +67,6 @@ namespace GestorEventos.DAL.Repositories
         {
             var oldEntity = FindById(entity.Id);
 
-
-
             if (oldEntity != null)
             {
                 entity.CreatedDate = oldEntity.CreatedDate;

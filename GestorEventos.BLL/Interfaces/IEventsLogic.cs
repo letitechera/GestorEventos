@@ -37,5 +37,7 @@ namespace GestorEventos.BLL.Interfaces
         IEnumerable<Participant> GetParticipants(int eventId);
 
         Participant GetParticipant(int participantId);
+
+        IEnumerable<Participant> GetAssistants(int eventId);
     }
 }

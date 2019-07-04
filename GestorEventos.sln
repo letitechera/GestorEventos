@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestorEventos.Core", "Gesto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestorEventos.Tests", "GestorEventos.Tests\GestorEventos.Tests.csproj", "{32B503FC-ADA0-4B97-8337-22198EF2ACCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestorEventos.DAL", "GestorEventos.DAL\GestorEventos.DAL.csproj", "{22FB1396-1EF1-4830-BDEC-C6A297DDD6E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GestorEventos.DAL", "GestorEventos.DAL\GestorEventos.DAL.csproj", "{22FB1396-1EF1-4830-BDEC-C6A297DDD6E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -52,10 +52,9 @@ namespace GestorEventos.BLL
                         var adminUserId = admin.Id;
                         var adminUser = await _userManager.FindByIdAsync(adminUserId);
 
-                        // TODO: Replace for redirectionLink
-                        string redirectionLink = string.Empty;
+                        string redirectionLink = _configuration.GetValue<string>("SiteOptions:Users");
 
-                        //await SendRegistrationAlertMail(user, adminUser.Email, redirectionLink);
+                        await SendRegistrationAlertMail(user, adminUser.Email, redirectionLink);
                     }
                 }
             }
@@ -94,8 +93,7 @@ namespace GestorEventos.BLL
 
             if (user == null)
             {
-                // TODO: Fix
-                return null;
+                return new ResetPasswordResult(false);
             }
 
             try

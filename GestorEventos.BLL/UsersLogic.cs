@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using GestorEventos.BLL.Interfaces;
 using GestorEventos.Models.DTO;
 using GestorEventos.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace GestorEventos.BLL
@@ -15,12 +17,14 @@ namespace GestorEventos.BLL
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ISendGridLogic _sendGridLogic;
+        private readonly IHttpContextAccessor _http;
 
-        public UsersLogic(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ISendGridLogic sendGridLogic)
+        public UsersLogic(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ISendGridLogic sendGridLogic, IHttpContextAccessor http)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _sendGridLogic = sendGridLogic;
+            _http = http;
         }
 
         public async Task<bool> EnableUser(string userId, string roleId, string actionUrl)
@@ -70,7 +74,19 @@ namespace GestorEventos.BLL
 
         public async Task<IEnumerable<UserDTO>> GetAllUsers()
         {
-            return null;
+            var current = _http.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return _userManager.Users.Where(u => u.Email != current).Select(u => new UserDTO(u));
+        }
+
+        public async Task<IEnumerable<IdentityRole>> GetRoles()
+        {
+            return _roleManager.Roles;
+        }
+
+        public async Task AssignRole(string userId, string role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            await _userManager.AddToRoleAsync(user, role);
         }
 
         public async Task<UserDTO> GetUser(string userId)

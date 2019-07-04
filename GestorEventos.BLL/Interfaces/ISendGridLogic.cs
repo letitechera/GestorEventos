@@ -9,10 +9,10 @@ namespace GestorEventos.BLL.Interfaces
         Task<Response> SendEmailValidation(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendPasswordReset(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendUserRegistrationAlert(string recipName, string recipEmail, string linkUrl);
-        //Task<Response> SendUserRegistrationByAdminAlert(string recipName, string recipEmail, string linkUrl);
         Task<Response> SendQRCodeEmail(Participant participant, byte[] qrCode);
         Task<Response> SendCertificateEmail(string recipEmail, byte[] certificate);
         Task SendCampaignEmail(int eventId);
         Task SendCancelationEmails(int eventId);
+        Task<Response> SendQREmail(string recipEmail, byte[] qrCode, string eventName = null);
     }
 }
